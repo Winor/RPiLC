@@ -1,5 +1,7 @@
 # Node-RGB-RPi
+
 Web RGB LED Strip controler.
+
 ![preview](http://i.imgur.com/skpYggc.png)
 
 ### Prerequisites
