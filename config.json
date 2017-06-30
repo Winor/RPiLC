@@ -1,0 +1,7 @@
+{
+  "redgpio": "17",
+  "greengpio": "22",
+  "bluegpio": "24",
+  "webserverport": "80",
+  "webdir": "web"
+}
