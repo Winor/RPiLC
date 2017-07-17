@@ -1,1 +1,1 @@
-var nowcolor ="#35a254"
+var nowcolor ="#000000"

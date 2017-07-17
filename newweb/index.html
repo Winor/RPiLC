@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="RGB LED STRIP PICKER">
   <meta name="author" content="Winor">
   <title>RGB LED Picker</title>
@@ -14,13 +15,22 @@
 <body>
 
   <div class="container">
-      <div class="center-block" style="width:320px;">
-        <div id="rgbValue"></div>
-        <div id="rgbPicker"></div>
+    <div class="center-block" style="width:320px;">
+      <div id="rgbValue"></div>
+      <div id="rgbPicker"></div>
+    </div>
+
+    <div class="center-block" style="width:160px;">
+      <button  onclick="joe.set(0,0,0)" type="button" class="btn btn-default">Turn Off</button>
+      <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#settings">Settings</button>
+    </div>
+    <div class="center-block" style="width:320px;">
+      <div id='settings' class="collapse">
+        Color Sets:
+
       </div>
+    </div>
   </div>
-
-
 
 
 
@@ -30,12 +40,9 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <!-- Custom Changes -->
   <link href="style.css" rel="stylesheet">
   <!-- joe template -->
   <link rel="stylesheet" href="css/pygment_trac.css">
@@ -48,7 +55,10 @@
   <script src="socket.io/socket.io.js"></script>
   <script src='js/ccode.js'></script>
   <script src='js/demo.js'></script>
-
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
 
 </body>
 
