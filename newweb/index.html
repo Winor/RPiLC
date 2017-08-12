@@ -21,12 +21,14 @@
     </div>
 
     <div class="center-block" style="width:160px;">
-      <button  onclick="joe.set(0,0,0)" type="button" class="btn btn-default">Turn Off</button>
+      <button onclick="hardset(0,0,0)" type="button" class="btn btn-default">Turn Off</button>
       <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#settings">Settings</button>
     </div>
     <div class="center-block" style="width:320px;">
       <div id='settings' class="collapse">
-        Color Sets:
+        <p><h4>Color Sets:</<h4></p>
+        <p><input id="colorsetseti" type="checkbox" data-toggle="toggle" data-size="mini"></p>
+
 
       </div>
     </div>
@@ -59,7 +61,9 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
-
+  <!-- toogle -->
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </body>
 
 </html>
