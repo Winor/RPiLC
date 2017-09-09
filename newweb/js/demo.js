@@ -4,7 +4,8 @@ var val = document.getElementById('rgbValue');
 var socket = io.connect();
 var hexi;
 var hardset;
-var fadeoff;
+var fade;
+var colorselect;
 var joe = colorjoe.rgb('rgbPicker', nowcolor)
 socket.on('hex', function(hexs) {
   var newhex = hexs.hex;
@@ -60,15 +61,48 @@ hardset = function(r, g, b) {
     });
   };
 
-fadeoff = function (r, g, b){
-  do {
-  rz =  Math.max(0, r--);
-  gz =  Math.max(0, g--);
-  bz =  Math.max(0, b--);
-  retur('rgb(' + rz + ',' + gz + ',' + bz + ')');
-  console.log(rz +' '+ gz +' ' + bz);
-} while (rz,gz,bz > 0);
+fade = function(){
+var ctf = [];
+ctf.push(document.getElementById("c1").value);
+ctf.push(document.getElementById("c2").value);
+ctf.push(document.getElementById("c3").value);
+ctf.push(document.getElementById("c4").value);
+console.log(ctf);
+for (i = 0; i < 5; i++) {
+  (function (i) {
+    setTimeout(function () {
+      if (document.getElementById("colorsetseti").checked == false) {
+        return;
+      } else {
+        if(i==4){
+          i=0;
+          fade();
+          console.log('it is!');
+        }
 
+  console.log(ctf[i]);
+  joe.set(ctf[i]);
+  console.log(document.getElementById("colorsetseti").checked);
+  };
+  }, 3000*i);
+  })(i);
+}
+};
+
+
+function convertHex(hex){
+    hex = hex.replace('#','');
+    r = parseInt(hex.substring(0,2), 16);
+    g = parseInt(hex.substring(2,4), 16);
+    b = parseInt(hex.substring(4,6), 16);
+
+    result = r+','+g+','+b;
+    return result;
+};
+
+colorselect = function(mana) {
+  console.log(mana);
+  document.getElementById(mana).value = hexi;
 };
 
 console.log('hi');

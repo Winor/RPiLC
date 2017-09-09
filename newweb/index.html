@@ -16,7 +16,7 @@
 
   <div class="container">
     <div class="center-block" style="width:320px;">
-      <div id="rgbValue"></div>
+      <div class="text-center" id="rgbValue"></div>
       <div id="rgbPicker"></div>
     </div>
 
@@ -26,9 +26,24 @@
     </div>
     <div class="center-block" style="width:320px;">
       <div id='settings' class="collapse">
-        <p><h4>Color Sets:</<h4></p>
-        <p><input id="colorsetseti" type="checkbox" data-toggle="toggle" data-size="mini"></p>
+        <p><h4>Colors:</<h4></p>
+        <p><input id="colorsetseti" type="checkbox" data-toggle="toggle" data-size="mini"  onchange="fade()"></p>
 
+        <div class="row" data-toggle="buttons">
+          <label class="">
+              <input type="text" name="options" value="black" id="c1" autocomplete="off" > <button onclick="colorselect('c1')" type="button" class="btn btn-default">Set</button>
+            </label>
+            <label class="">
+              <input type="text" name="options" value="black" id="c2" autocomplete="off"> <button onclick="colorselect('c2')" type="button" class="btn btn-default">Set</button>
+            </label>
+            <label class="">
+              <input type="text" name="options" value="black" id="c3" autocomplete="off"> <button onclick="colorselect('c3')" type="button" class="btn btn-default">Set</button>
+            </label>
+            <label class="">
+              <input type="text" name="options" value="black" id="c4" autocomplete="off"> <button onclick="colorselect('c4')" type="button" class="btn btn-default">Set</button>
+            </label>
+
+        </div>
 
       </div>
     </div>
