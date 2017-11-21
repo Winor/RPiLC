@@ -9,7 +9,7 @@ Easily control your RGB LED strip with a Raspberry PI.
 * Web controlled, clean design
 * Multiple clients can be opened simultaneously
 * Cycle between selected colors (preview feature, client side only)
-#### coming soon
+#### Coming soon
 * API
 * Color fade
 * Better server app
@@ -19,9 +19,9 @@ Easily control your RGB LED strip with a Raspberry PI.
 ## Prerequisites
 
 In order to use this app you need:
-* a Raspberry Pi.
+* A Raspberry Pi.
 * Node.js installed.
-* pigpio C library (Version V41 or higher)
+* Pigpio C library (Version V41 or higher)
 * RGB led connected to the Pi's GPIO (you can follow [this guide](http://dordnung.de/raspberrypi-ledstrip/) for wiring)
 
 ## How to use?
