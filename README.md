@@ -1,4 +1,4 @@
-# RPiLC - Raspberry PI LED Control
+# RPiLC - Raspberry Pi LED Control
 
 Easily control your RGB LED strip with a Raspberry PI.
 
