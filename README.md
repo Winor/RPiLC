@@ -1,6 +1,6 @@
 # Node-RGB-RPi
 
-Easily control your LED strip with a Raspberry PI.
+Easily control your RGB LED strip with a Raspberry PI.
 
 ![preview](https://i.imgur.com/aCaw8fB.png)
 
@@ -10,25 +10,28 @@ In order to use this app you need:
 * a Raspberry Pi.
 * Node.js installed.
 * pigpio C library (Version V41 or higher)
-* RGB led connected to the Pi's GPIO (you can follow this [guide](http://dordnung.de/raspberrypi-ledstrip/) for wiring)
+* RGB led connected to the Pi's GPIO (you can follow [this guide](http://dordnung.de/raspberrypi-ledstrip/) for wiring)
 
-### Installing
+## How to use?
+You can follow these 3 easy steps to get it running on your own PI:
+
+#### 1. Get the files:
 
 ```
 git clone https://github.com/Winor/Node-RGB-RPi
 cd Node-RGB-RPi
 npm install
 ``` 
-#### Config
+#### 2. Config
 Edit config.json to match your setup
 
-#### run
+#### 3. Run
 
 ```
 sudo node index.js
 ```
 
-## Built With
+## Resources
 
 * [colorjoe](https://github.com/bebraw/colorjoe) - The color picker used
 
