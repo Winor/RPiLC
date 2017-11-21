@@ -1,4 +1,4 @@
-# Node-RGB-RPi
+# RPiLC - Raspberry PI LED Control
 
 Easily control your RGB LED strip with a Raspberry PI.
 
@@ -30,8 +30,8 @@ You can follow these 3 easy steps to get it running on your own PI:
 #### 1. Get the files
 
 ```
-git clone https://github.com/Winor/Node-RGB-RPi
-cd Node-RGB-RPi
+git clone https://github.com/Winor/RPiLC
+cd RPiLC
 npm install
 ``` 
 #### 2. Config
