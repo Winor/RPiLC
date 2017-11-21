@@ -1,8 +1,8 @@
 # Node-RGB-RPi
 
-Web RGB LED Strip controler.
+Easily control your LED strip with a Raspberry PI.
 
-![preview](http://i.imgur.com/skpYggc.png)
+![preview](https://i.imgur.com/aCaw8fB.png)
 
 ### Prerequisites
 
@@ -18,8 +18,12 @@ In order to use this app you need:
 git clone https://github.com/Winor/Node-RGB-RPi
 cd Node-RGB-RPi
 npm install
-```
-and then run it with:
+``` 
+#### Config
+Edit config.json to match your setup
+
+#### run
+
 ```
 sudo node index.js
 ```
