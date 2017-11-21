@@ -54,6 +54,7 @@ joe.on('done', function(c) {
 });
 
 hardset = function(r, g, b) {
+   $('#colorsetseti').bootstrapToggle('off')
     console.log('rgb(' + r + ',' + g + ',' + b + ')');
     joe.set('rgb(' + r + ',' + g + ',' + b + ')');
     socket.emit('hex', {
@@ -62,6 +63,9 @@ hardset = function(r, g, b) {
   };
 
 fade = function(){
+  if (document.getElementById("colorsetseti").checked == false) {
+    return;
+  } else {
 var ctf = [];
 ctf.push(document.getElementById("c1").value);
 ctf.push(document.getElementById("c2").value);
@@ -69,10 +73,11 @@ ctf.push(document.getElementById("c3").value);
 ctf.push(document.getElementById("c4").value);
 console.log(ctf);
 for (i = 0; i < 5; i++) {
+
   (function (i) {
     setTimeout(function () {
       if (document.getElementById("colorsetseti").checked == false) {
-        return;
+        fade();
       } else {
         if(i==4){
           i=0;
@@ -88,7 +93,7 @@ for (i = 0; i < 5; i++) {
   })(i);
 }
 };
-
+};
 
 function convertHex(hex){
     hex = hex.replace('#','');
