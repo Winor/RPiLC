@@ -4,7 +4,19 @@ Easily control your RGB LED strip with a Raspberry PI.
 
 ![preview](https://i.imgur.com/aCaw8fB.png)
 
-### Prerequisites
+## Features
+* Touch ready
+* Web controlled, clean design
+* Multiple clients can be opened simultaneously
+* Cycle between selected colors (preview feature, client side only)
+#### coming soon
+* API
+* Color fade
+* Better server app
+* Light sensor support
+* More.
+
+## Prerequisites
 
 In order to use this app you need:
 * a Raspberry Pi.
@@ -15,7 +27,7 @@ In order to use this app you need:
 ## How to use?
 You can follow these 3 easy steps to get it running on your own PI:
 
-#### 1. Get the files:
+#### 1. Get the files
 
 ```
 git clone https://github.com/Winor/Node-RGB-RPi
