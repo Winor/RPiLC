@@ -11,8 +11,8 @@
 }
 
 .colorPicker {
-    background: #656565;
-    border: 1px solid #656565;
+    background: #333;
+    border: 1px solid #0c0c0c;
     -moz-border-radius: .3em;
     border-radius: .3em;
     margin: 1em;
@@ -107,8 +107,8 @@
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border: 2px solid white;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -120,6 +120,7 @@
 }
 
 .colorPicker .oned .bg {
+  /*
     border: 1px solid #BBB;
     /*
     -moz-border-radius: .3em;

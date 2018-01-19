@@ -240,7 +240,7 @@ function labelInput(klass, n, p, maxLen) {
     var i = input('text', d, maxLen, id);
 
     return {
-        label: l, 
+        label: l,
         input: i
     };
 }
@@ -260,7 +260,7 @@ function input(t, p, maxLen, id) {
     var elem = e('input', '', p);
     elem.type = t;
 
-    if(maxLen) { 
+    if(maxLen) {
         elem.maxLength = maxLen;
     }
 
@@ -298,7 +298,7 @@ var utils = {
     X: X,
     Y: Y,
     BG: BG
-};  
+};
 function currentColor(p) {
     var e1 = utils.div('currentColorContainer', p);
     var e = utils.div('currentColor', e1);
@@ -335,7 +335,7 @@ function fields(p, joe, o) {
         e.input.onkeyup = update;
 
         return {
-            name: n, 
+            name: n,
             e: e
         };
     });
@@ -604,7 +604,7 @@ function setup(o) {
         if (previous.equals(col)) {
             return;
         }
-        
+
         for(var i = 0, len = listeners.done.length; i < len; i++) {
             listeners.done[i].fn(col);
         }
@@ -643,6 +643,16 @@ function setup(o) {
 
             if(!oldCol.equals(col)) {
                 this.update();
+            }
+
+            return this;
+        },
+        setnu: function(c) {
+            var oldCol = this.get();
+            col = cbs.init(getColor(c), xy, z);
+
+            if(!oldCol.equals(col)) {
+            //    this.update();
             }
 
             return this;

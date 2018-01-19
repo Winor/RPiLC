@@ -1,31 +1,30 @@
 {
-  "name": "Node-RGB-RPi",
-  "version": "0.5.1",
+  "name": "RPiLC",
+  "version": "0.0.9",
   "author": "Winor",
   "keywords": [
     "led strip controler",
-	"rpi",
-	"web"
+    "rpi",
+    "web"
   ],
   "description": "A simple RGB led strip web controler",
   "license": "MIT",
   "repository": {
     "type": "git",
-	"url": "https://github.com/Winor/Node-RGB-RPi.git"
-	
+    "url": "https://github.com/Winor/RPiLC.git"
   },
-  "main": "./index.js",
-   "scripts": {
-        "build": "node index.js"
-    },
-	  "engines": {
-    "node": "> 0.10.29",
-    "npm": "> 1.4.21"
+  "main": "index.js",
+  "scripts": {
+    "start": "sudo node index.js"
+  },
+  "engines": {
+    "node": "> 0.10.29"
   },
   "dependencies": {
     "express": "~4.14.0",
     "pigpio": "~0.4.0",
-    "socket.io": "~1.7.2"
+    "socket.io": "~1.7.2",
+    "tinygradient": "^0.3.1",
+	  "tinycolor2": "^1.0.0"
   }
-
 }
