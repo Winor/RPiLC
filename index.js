@@ -106,7 +106,7 @@ io.sockets.on('connection', function(socket) {
         }
 
 
-      }, 5000);
+      }, 8000);
 
 
 
