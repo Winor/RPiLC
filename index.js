@@ -1,17 +1,18 @@
 const winowatch = require("./winowatch.js");
 winowatch.info('Starting RPiLC ...');
-let fs = require("fs");
+const fs = require("fs");
+
+// For knowing when null
 let csstate;
 let thehex;
-//-------load config---------
+
+// load config file
 let configfile = fs.readFileSync("config.json");
-// Define to JSON type
 let config = JSON.parse(configfile);
-winowatch.info('Config Loaded.');
-//--------load config end-----
-//--- gpio pwm seting input start ---
+winowatch.debug('Config Loaded.');
+
+// require pigpio and set PWM gpio numbers
 const Gpio = require('pigpio').Gpio,
-  //colors pins
   red = new Gpio(config.redgpio, {
     mode: Gpio.OUTPUT
   }),
@@ -22,32 +23,37 @@ const Gpio = require('pigpio').Gpio,
     mode: Gpio.OUTPUT
   });
 
-// function to write RGB value.
+// function to write PWM value
 function gpiowrite(r, g, b) {
   red.pwmWrite(r);
   green.pwmWrite(g);
   blue.pwmWrite(b);
 };
 
-//webserver and socketio
+// Webserver and socketio
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
-// --- web server start ---
+
+// web server start
 server.listen(config.webserverport);
 app.use(express.static(config.webdir));
-// --- web server end ---
 
-
-//socketio
+/*
+socketio
+list of possible emitted events:
+csync - send a color code without emiting update event
+fsync - send the slected color cricle status and color list
+hex - send a color code and emit update event
+*/
 io.sockets.on('connection', function(socket) {
-  winowatch.info("Client Connected.");
-  if (csstate == null) {
-  } else {
+  winowatch.debug("Client Connected.");
+
+// if not null, send color and cricle state to new clients
+  if (csstate != null) {
     syncemit();
   }
-
 
   if (thehex != null) {
 
@@ -56,10 +62,12 @@ io.sockets.on('connection', function(socket) {
   });
 };
 
+// write color received from client to gpio
   socket.on('color', function(vrgb) {
     gpiowrite(vrgb.red, vrgb.green, vrgb.blue);
   });
 
+// fade to a color
   socket.on('fadeoc', function(a) {
     fade(a.colortf);
     io.sockets.emit('csync', {
@@ -67,12 +75,13 @@ io.sockets.on('connection', function(socket) {
     });
   });
 
+// color get cricle info and timer
   socket.on('fade', function(cs) {
-    winowatch.info("Got a list of colors to fade: " + cs.hexf +". the state of the button is now "+ cs.state);
+    winowatch.debug("Got a list of colors to fade: " + cs.hexf +". the state of the button is now "+ cs.state);
     csstate = cs.state;
     cshexf = cs.hexf;
     syncemit = function() {
-      winowatch.info("sent fade info to other clients.");
+      winowatch.debug("sent fade info to other clients.");
       io.sockets.emit('fsync', {
         thests: csstate,
         cctf: cshexf
@@ -84,7 +93,6 @@ io.sockets.on('connection', function(socket) {
       if (csstate == false) {
         return;
       }
-
 
       xi = 0;
       let timer = setInterval(function() {
@@ -104,60 +112,27 @@ io.sockets.on('connection', function(socket) {
           xi = 0;
           console.log('it is!');
         }
-
-
       }, 8000);
-
-
-
     };
 
     if (csstate == true) {
       faders();
     }
-
   });
 
-
-  // ---- note hex to update clients start ----
+  // update hex to clients
   socket.on('hex', function(hexs) {
     thehex = hexs.hex;
-    /*write to file
-    fs.writeFile(config.webdir + "/js/ccode.js", "let nowcolor =" + '"' + thehex + '"', function(err) {
-      if (err) {
-        return console.log(err);
-      };
-      //    console.log("The file was saved!");
-    });
-    *///write to file done
-    socket.emit('hex', {
-      hex: thehex
-    });
     io.sockets.emit('hex', {
       hex: thehex
     });
-    winowatch.info('Sent new color to Clients: ' + thehex);
-    io.emit('hex', {
-      hex: thehex
-    });
-    // ---- note hex to update clients end ----
+    winowatch.debug('Sent new color to Clients: ' + thehex);
   });
 });
 
-
-let convertHex = function(hex) {
-  hex = hex.replace('#', '');
-  r = parseInt(hex.substring(0, 2), 16);
-  g = parseInt(hex.substring(2, 4), 16);
-  b = parseInt(hex.substring(4, 6), 16);
-
-  result = [r, g, b];
-  return result;
-};
-
-
+// fade logic
 let fade = function(endColour) {
-  winowatch.info("Fading #" + thehex + ' and ' + endColour + "...");
+  winowatch.debug("Fading #" + thehex + ' and ' + endColour + "...");
   const tinygradient = require("tinygradient");
   const tinycolor = require("tinycolor2");
 
@@ -174,24 +149,13 @@ let fade = function(endColour) {
         let steps = gradient.rgb(9);
         let color = tinycolor(steps[i]);
         let rgbs = color.toRgb();
-        console.log(rgbs);
+        winowatch.debug(JSON.stringify(rgbs));
         let hexfa = color.toHex();
         gpiowrite(rgbs.r, rgbs.g, rgbs.b);
-
-        //if (i == steps.length) {
-        //console.log('it is! ' + hexfa);
-
-        //};
         thehex = hexfa
-
       }, 50 * i);
     })(i);
-
-
   };
-  return;
 };
-
-
 
 winowatch.info('ready.');
