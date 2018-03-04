@@ -223,10 +223,10 @@ app.get('/api/set/hex/:hex/', function(req, res) {
   })
 
 app.get('/api/set/rgb/:r.:g.:b/', function(req, res) {
-  if (req.params.r > 255 || req.params.g > 255 || req.params.b > 255) {
+  if (isNaN(req.params.r) == true || isNaN(req.params.g) == true || isNaN(req.params.b) == true) {
     winowatch.warn("[API] Invalid RGB value");
     res.send("Invalid RGB value");
-  } else if ( isNaN(req.params.r) == true || isNaN(req.params.g) == true || isNaN(req.params.b) == true){
+  } else if (req.params.r > 255 || req.params.g > 255 || req.params.b > 255) {
     winowatch.warn("[API] Invalid RGB value");
     res.send("Invalid RGB value");
   }
