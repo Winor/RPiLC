@@ -51,24 +51,24 @@ hex - send a color code and emit update event
 io.sockets.on('connection', function(socket) {
   winowatch.debug("Client Connected.");
 
-// if not null, send color and circle state to new clients
+  // if not null, send color and circle state to new clients
   if (csstate != null) {
     syncemit();
   }
 
   if (thehex != null) {
 
-  io.sockets.emit('csync', {
-    hex: thehex
-  });
-};
+    io.sockets.emit('csync', {
+      hex: thehex
+    });
+  };
 
-// write color received from client to gpio
+  // write color received from client to gpio
   socket.on('color', function(vrgb) {
     gpiowrite(vrgb.red, vrgb.green, vrgb.blue);
   });
 
-// fade to a color
+  // fade to a color
   socket.on('fadeoc', function(a) {
     fade(a.colortf);
     io.sockets.emit('csync', {
@@ -76,9 +76,9 @@ io.sockets.on('connection', function(socket) {
     });
   });
 
-// color get circle info and timer
+  // color get circle info and timer
   socket.on('fade', function(cs) {
-    winowatch.debug("Got a list of colors to fade: " + cs.hexf +". the state of the button is now "+ cs.state);
+    winowatch.debug("Got a list of colors to fade: " + cs.hexf + ". the state of the button is now " + cs.state);
     csstate = cs.state;
     cshexf = cs.hexf;
     syncemit = function() {
@@ -160,37 +160,11 @@ let fade = function(endColour) {
 
 // API
 app.get('/api/status', function(req, res) {
-  res.json({"color": thehex, "status": "on"})
+  res.json({
+    "color": thehex,
+    "status": "on"
+  })
 })
-
-/*
-app.post('/api/fade', function(req, res) {
-  let data = req.body;
-  if (data.rgb != null) {
-    let rgb = "rgb(" +data.rgb.r+"," + data.rgb.g+ ","+ data.rgb.b + ")";
-    let color = tinycolor(rgb);
-    thex = color.toHex();
-    fade(thex);
-    thehex = thex;
-    io.sockets.emit('csync', {
-      hex: thehex
-    });
-    res.send("ok.");
-  } else if (data.hex != null) {
-    fade(data.hex);
-    thehex = data.hex;
-    io.sockets.emit('csync', {
-      hex: thehex
-    });
-    res.send("ok.");
-  } else {
-    res.send("error.");
-  }
-
-})
-
-
-*/
 
 app.get('/api/on', function(req, res) {
   thehex = "#f7ff4e";
@@ -220,7 +194,7 @@ app.get('/api/set/hex/:hex/', function(req, res) {
   gpiowrite(rgb.r, rgb.g, rgb.b);
   res.send("ok.");
   winowatch.debug("[API] Got a color value: " + req.params.hex)
-  })
+})
 
 app.get('/api/set/rgb/:r.:g.:b/', function(req, res) {
   if (isNaN(req.params.r) == true || isNaN(req.params.g) == true || isNaN(req.params.b) == true) {
@@ -229,18 +203,29 @@ app.get('/api/set/rgb/:r.:g.:b/', function(req, res) {
   } else if (req.params.r > 255 || req.params.g > 255 || req.params.b > 255) {
     winowatch.warn("[API] Invalid RGB value");
     res.send("Invalid RGB value");
+  } else {
+    let rgb = "rgb(" + req.params.r + "," + req.params.g + "," + req.params.b + ")";
+    let color = tinycolor(rgb);
+    thehex = color.toHex();
+    io.sockets.emit('csync', {
+      hex: thehex
+    });
+    gpiowrite(req.params.r, req.params.g, req.params.b);
+    res.send("ok.");
+    winowatch.debug("[API] Got a color value: " + JSON.stringify(req.params));
   }
-  else {
-  let rgb = "rgb(" +req.params.r+"," + req.params.g+ ","+ req.params.b + ")";
-  let color = tinycolor(rgb);
-  thehex = color.toHex();
-  io.sockets.emit('csync', {
-    hex: thehex
-  });
-  gpiowrite(req.params.r, req.params.g, req.params.b);
-  res.send("ok.");
-  winowatch.debug("[API] Got a color value: " + JSON.stringify(req.params));
-}
-  })
+})
+
+app.get('/api/fade/:hex/', function(req, res) {
+  if (thehex == null) {
+    thehex = "000000";
+  }
+    fade(req.params.hex);
+    thehex = req.params.hex;
+    io.sockets.emit('csync', {
+      hex: thehex
+    });
+    res.send("ok.");
+})
 
 winowatch.info('ready.');
