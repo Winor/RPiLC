@@ -2,10 +2,6 @@ const winowatch = require("./winowatch.js");
 winowatch.info('Starting RPiLC ...');
 const fs = require("fs");
 
-// For knowing when null
-let csstate;
-let thehex;
-
 // load config file
 let configfile = fs.readFileSync("config.json");
 let config = JSON.parse(configfile);
@@ -41,191 +37,137 @@ const tinycolor = require("tinycolor2");
 server.listen(config.webserverport);
 app.use(express.static(config.webdir));
 
-/*
-socketio
-list of possible emitted events:
-csync - send a color code without emiting update event
-fsync - send the slected color circle status and color list
-hex - send a color code and emit update event
-*/
-io.sockets.on('connection', function(socket) {
-  winowatch.debug("Client Connected.");
-
-  // if not null, send color and circle state to new clients
-  if (csstate != null) {
-    syncemit();
+let data = {
+  Version: "0.0.5",
+  type: 'desktop',
+  description: "Benji's Workstation",
+  ColorVals: {
+    CurrentHEX: '000000',
+    CurrentRGB: {
+      r: 0,
+      g: 0,
+      b: 0
+    },
+    CurrentCName: 'black'
+  },
+  CycleMode: {
+    state: false, // true / false
+    colors: ['000000', '000000', '000000', '000000'],
+    speed: 8000
+  },
+  RainbowMode: {
+    state: false, // true / false
+    speed: 6000
+  },
+  FlashMode: {
+    state: false, // true / false
+    colors: ['000000', '000000'],
+    speed: 1000
   }
+}
 
-  if (thehex != null) {
-
-    io.sockets.emit('csync', {
-      hex: thehex
-    });
-  };
-
-  // write color received from client to gpio
-  socket.on('color', function(vrgb) {
-    gpiowrite(vrgb.red, vrgb.green, vrgb.blue);
-  });
-
-  // fade to a color
-  socket.on('fadeoc', function(a) {
-    fade(a.colortf);
-    io.sockets.emit('csync', {
-      hex: a.colortf
-    });
-  });
-
-  // color get circle info and timer
-  socket.on('fade', function(cs) {
-    winowatch.debug("Got a list of colors to fade: " + cs.hexf + ". the state of the button is now " + cs.state);
-    csstate = cs.state;
-    cshexf = cs.hexf;
-    syncemit = function() {
-      winowatch.debug("sent fade info to other clients.");
-      io.sockets.emit('fsync', {
-        thests: csstate,
-        cctf: cshexf
-      });
+function cval(c) {
+  let color = tinycolor(c);
+  if (color.isValid()) {
+    return {
+      rgb: color.toRgb(),
+      hex: color.toHex(),
+      name: color.toName()
     }
-    syncemit();
-    faders = function() {
-
-      if (csstate == false) {
-        return;
-      }
-
-      xi = 0;
-      let timer = setInterval(function() {
-
-        if (csstate == false) {
-          clearInterval(timer)
-          return;
-        }
-
-        fade(cshexf[xi]);
-        io.sockets.emit('csync', {
-          hex: cshexf[xi]
-        });
-        xi++;
-
-        if (xi == 4) {
-          xi = 0;
-          winowatch.debug('finished a circle!!');
-        }
-      }, 8000);
-    };
-
-    if (csstate == true) {
-      faders();
-    }
-  });
-
-  // update hex to clients
-  socket.on('hex', function(hexs) {
-    thehex = hexs.hex;
-    io.sockets.emit('hex', {
-      hex: thehex
-    });
-    winowatch.debug('Sent new color to Clients: ' + thehex);
-  });
-});
-
-// fade logic
-let fade = function(endColour) {
-  winowatch.debug("Fading #" + thehex + ' and ' + endColour + "...");
-  const tinygradient = require("tinygradient");
-
-  let gradient = tinygradient([
-    thehex,
-    endColour
-  ]);
-
-  const steps = gradient.rgb(9);
-  for (i = 0; i < steps.length; i++) {
-    (function(i) {
-      setTimeout(function() {
-
-        let steps = gradient.rgb(9);
-        let color = tinycolor(steps[i]);
-        let rgbs = color.toRgb();
-        winowatch.debug(JSON.stringify(rgbs));
-        let hexfa = color.toHex();
-        gpiowrite(rgbs.r, rgbs.g, rgbs.b);
-        thehex = hexfa
-      }, 50 * i);
-    })(i);
-  };
-};
-
-// API
-app.get('/api/status', function(req, res) {
-  res.json({
-    "color": thehex,
-    "status": "on"
-  })
-})
-
-app.get('/api/on', function(req, res) {
-  thehex = "#f7ff4e";
-  io.sockets.emit('csync', {
-    hex: thehex
-  });
-  gpiowrite(247, 255, 78);
-  res.send("ok.");
-})
-
-app.get('/api/off', function(req, res) {
-  thehex = "#000000";
-  io.sockets.emit('csync', {
-    hex: thehex
-  });
-  gpiowrite(0, 0, 0);
-  res.send("ok.");
-})
-
-app.get('/api/set/hex/:hex/', function(req, res) {
-  let color = tinycolor(req.params.hex);
-  let rgb = color.toRgb();
-  thehex = req.params.hex;
-  io.sockets.emit('csync', {
-    hex: thehex
-  });
-  gpiowrite(rgb.r, rgb.g, rgb.b);
-  res.send("ok.");
-  winowatch.debug("[API] Got a color value: " + req.params.hex)
-})
-
-app.get('/api/set/rgb/:r.:g.:b/', function(req, res) {
-  if (isNaN(req.params.r) == true || isNaN(req.params.g) == true || isNaN(req.params.b) == true) {
-    winowatch.warn("[API] Invalid RGB value");
-    res.send("Invalid RGB value");
-  } else if (req.params.r > 255 || req.params.g > 255 || req.params.b > 255) {
-    winowatch.warn("[API] Invalid RGB value");
-    res.send("Invalid RGB value");
   } else {
-    let rgb = "rgb(" + req.params.r + "," + req.params.g + "," + req.params.b + ")";
-    let color = tinycolor(rgb);
-    thehex = color.toHex();
-    io.sockets.emit('csync', {
-      hex: thehex
-    });
-    gpiowrite(req.params.r, req.params.g, req.params.b);
-    res.send("ok.");
-    winowatch.debug("[API] Got a color value: " + JSON.stringify(req.params));
+    winowatch.warn("invalid color.");
+    return "error";
   }
-})
+}
 
-app.get('/api/fade/:hex/', function(req, res) {
-  if (thehex == null) {
-    thehex = "000000";
+  function setcolor(c) {
+    if (cval(c) == "error") {
+      winowatch.warn("Cannot set this color.");
+      return "error";
+    } else {
+      let color = cval(c);
+      data.ColorVals.CurrentHEX = color.hex;
+      data.ColorVals.CurrentRGB = color.rgb;
+      data.ColorVals.CurrentCName = color.name;
+      io.sockets.emit('updatecolor', data.ColorVals);
+      winowatch.debug("Updated ColorVals to all clients.");
+      gpiowrite(color.rgb.r, color.rgb.g, color.rgb.b);
+    }
   }
-    fade(req.params.hex);
-    thehex = req.params.hex;
-    io.sockets.emit('csync', {
-      hex: thehex
-    });
-    res.send("ok.");
-})
 
-winowatch.info('ready.');
+  /*
+  socketio
+  list of possible emitted events:
+  connection - send all data for new clients
+  ----
+  csync - send a color code without emiting update event
+  fsync - send the slected color circle status and color list
+  hex - send a color code and emit update event
+  */
+  io.sockets.on('connection', function(socket) {
+        winowatch.debug("New client Connected.");
+        io.sockets.emit('data', data);
+        winowatch.debug("Sent data to new client.");
+        // Write color preview value received from client to gpio
+        socket.on('change', function(c) {
+          gpiowrite(c.r, c.g, c.b);
+        });
+        // Write color value received from client to gpio & update
+        socket.on('done', function(val) {
+          setcolor(val);
+        });
+        // get cycle info from client
+        socket.on('cycle', function(cycle) {
+            winowatch.debug("Got a list of colors to fade: " + cycle.colors + ". the state of the button is now " + cycle.state);
+            data.CycleMode.state = cycle.state;
+            data.CycleMode.colors = cycle.colors;
+            // data.CycleMode.speed = cycle.speed;
+            io.sockets.emit('CycleSync', data.CycleMode);
+            CycleModeTimer();
+        });
+        });
+      // fade logic
+      function fade(endColour) {
+        winowatch.debug("Fading " + data.ColorVals.CurrentHEX + ' and ' + endColour + "...");
+        const tinygradient = require("tinygradient");
+
+        let gradient = tinygradient([
+          data.ColorVals.CurrentHEX,
+          endColour
+        ]);
+
+        const steps = gradient.rgb(9);
+        for (i = 0; i < steps.length; i++) {
+          (function(i) {
+            setTimeout(function() {
+              const steps = gradient.rgb(9);
+              let color = tinycolor(steps[i]);
+              let rgbs = color.toRgb();
+              winowatch.debug(JSON.stringify(rgbs));
+              setcolor(rgbs);
+            }, 50 * i);
+          })(i);
+        };
+      }
+      // Cycle timer
+      function CycleModeTimer() {
+        if (data.CycleMode.state) {
+          xi = 0;
+          let timer = setInterval(function() {
+
+            if (data.CycleMode.state == false) {
+              clearInterval(timer)
+              return;
+            }
+
+            fade(data.CycleMode.colors[xi]);
+            xi++;
+
+            if (xi == data.CycleMode.colors.length) {
+              xi = 0;
+              winowatch.debug('finished a circle!!');
+            }
+          }, data.CycleMode.speed);
+        }
+      }
+      winowatch.info('ready.');
