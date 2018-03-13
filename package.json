@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "express": "~4.16.2",
-    "pigpio": "~0.6.4",
+    "pigpio": "~0.7.0",
     "socket.io": "~2.0.4",
     "tinygradient": "^0.3.1",
 	  "tinycolor2": "^1.0.0"
