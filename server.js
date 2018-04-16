@@ -40,7 +40,7 @@ app.use(express.static(config.webdir));
 let data = {
   Version: "0.0.5",
   type: 'desktop',
-  description: "Benji's Workstation",
+  description: "My Workstation",
   ColorVals: {
     CurrentHEX: '000000',
     CurrentRGB: {
@@ -52,7 +52,7 @@ let data = {
   },
   CycleMode: {
     state: false, // true / false
-    colors: ['000000', '000000', '000000', '000000'],
+    colors: ['#be0000', '#beb500', '#21be00', '#0051be'],
     speed: 8000
   },
   RainbowMode: {
