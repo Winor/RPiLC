@@ -38,7 +38,7 @@ server.listen(config.webserverport);
 app.use(express.static(config.webdir));
 
 let data = {
-  Version: "0.0.5",
+  Version: "0.1.5",
   type: 'desktop',
   description: "My Workstation",
   ColorVals: {
