@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- apple -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="RPiLC">
+	<!-- icons -->
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="icon" type="image/png" href="icons\favicon96x96.png" sizes="96x96">
+	<link rel="apple-touch-icon" href="iphone-favicon120x120.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons\iphone-favicon180x180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons\iphone-favicon152x152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="icons\iphone-favicon167x167.png">
+	<!-- end -->
+	<title>RPiLC Beta</title>
+	<!-- CSS -->
+	<link rel="stylesheet" href="css\uikit.min.css">
+	<link rel="stylesheet" href="css\style.css">
+	<link rel="stylesheet" href="css\pygment_trac.css">
+	<link rel="stylesheet" href="css\iehacks.css">
+	<link rel="stylesheet" href="css\colorjoe.css">
+</head>
+
+<body>
+	<div id="colorbar" class="colorbar"></div>
+	<div class="logo"></div>
+	<div class="uk-flex-center" uk-grid>
+		<div class="uk-flex-first">
+			<div id="rgbPicker"></div>
+		</div>
+	</div>
+
+	<div class="uk-flex-center uk-grid-small uk-light" uk-grid>
+		<p uk-margin>
+			<button onclick="turnoff()" class="uk-button uk-button-default uk-button-small">off</button>
+			<a class="uk-button uk-button-default uk-button-small" href="#settings" uk-toggle><span uk-icon="settings"></span></a>
+
+			<div id="settings" uk-modal>
+				<div class="uk-modal-dialog">
+					<button class="uk-modal-close-default" type="button" uk-close></button>
+					<div class="uk-modal-header">
+						<h2 class="uk-modal-title">RPiLC Setings</h2>
+					</div>
+					<div class="uk-modal-body">
+
+						<div>
+							<h6 class="uk-heading-line"><span>Server</span></h6>
+							<label class="uk-margin-small-right">IP</label>
+							<input id="servip" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="__.__.__.__:port">
+							<button onclick="swichserver(document.getElementById('servip').value)" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
+						</div>
+
+						<div class="uk-margin">
+							<h6 class="uk-heading-line"><span>RGB Value</span></h6>
+							<label class="uk-margin-small-right">R</label>
+							<input id="r" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="">
+
+
+							<label class="uk-margin-small-right uk-margin-small-left">G</label>
+							<input id="g" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="">
+
+
+							<label class=" uk-margin-small-left">B</label>
+							<input id="b" class="uk-input uk-form-width-xsmall uk-form-small uk-margin-small-left" type="text" placeholder="">
+							<button onclick="setrgbval()" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
+						</div>
+
+						<div>
+							<h6 class="uk-heading-line"><span>HEX Value</span></h6>
+							<label class="">#</label>
+							<input id="hex" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="#HEX">
+							<button onclick="sethexval()" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
+						</div>
+
+						<div class="uk-margin">
+							<h6 class="uk-heading-line"><span>About</span></h6>
+							<p class="uk-text-meta">RPiLC Client version v0.1.5 connected to 10.0.0.11 running server version v0.1.5</p>
+						</div>
+
+					</div>
+					<div class="uk-modal-footer uk-text-right">
+						<button class="uk-button uk-button-default uk-modal-close" type="button">close</button>
+					</div>
+
+				</div>
+			</div>
+		</p>
+
+	</div>
+	<div class="uk-light uk-margin uk-container uk-width-large">
+		<h6 class="uk-heading-line"><span>Modes</span></h6>
+		<ul uk-accordion>
+			<li>
+				<a class="uk-accordion-title uactitle" href="#">Cycle</a>
+				<div class="uk-accordion-content">
+					<!-- Cycle -->
+					<label><input id="CycleState" onchange="" class="uk-checkbox" type="checkbox" name="mode[1][]"> Enable</label><br>
+
+					<div class="uk-flex uk-margin">
+						<button onclick="addcolor('CycleStatecui')" class="uk-button uk-light uk-button-default uk-button-small">+</button>
+						<button onclick="removecolor()" class="uk-button uk-light uk-button-default uk-button-small">-</button>
+						<button onclick="setcolor()" class="uk-button uk-light uk-button-default uk-button-small next">set</button>
+					</div>
+					<div class="uk-margin uk-grid-small" id="CycleStatecui" uk-grid>
+
+						<div id="radio1dv">
+							<input type="radio" id="radio1" name="selectui" checked="checked" />
+							<label id="c1" for="radio1"></label>
+						</div>
+
+						<div id="radio2dv">
+							<input type="radio" id="radio2" name="selectui" />
+							<label id="c2" for="radio2"></label>
+						</div>
+
+						<div id="radio3dv">
+							<input type="radio" id="radio3" name="selectui" />
+							<label id="c3" for="radio3"></label>
+						</div>
+
+						<div id="radio4dv">
+							<input type="radio" id="radio4" name="selectui" />
+							<label id="c4" for="radio4"></label>
+						</div>
+
+					</div>
+
+					<div class="uk-clearfix">
+						<div class="uk-flex">
+							<div uk-form-custom="target: > * > span:first-child">
+								<select>
+							 <option value="1">Normal</option>
+							 <!--
+							 <option value="2">Slow</option>
+							 <option value="3">Very Slow</option>
+							 <option value="4">Fast</option>
+							 <option value="5">Very Fast</option>
+							  -->
+
+					 </select>
+								<button class="uk-button uk-light uk-button-default uk-button-small" type="button" tabindex="-1">
+							 <span></span>
+							 <span uk-icon="icon: chevron-down"></span>
+					 </button>
+							</div>
+							<div class="uk-flex">
+								<div uk-form-custom="target: > * > span:first-child">
+									<select>
+											<option value="1">Fade</option>
+											<!--
+											<option value="2">Flash</option>
+											<option value="3">Smooth</option>
+											-->
+
+									</select>
+									<button class="uk-button uk-light uk-button-default uk-button-small" type="button" tabindex="-1">
+											<span></span>
+											<span uk-icon="icon: chevron-down"></span>
+									</button>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+			</li>
+			<li>
+				<!--
+				<a class="uk-accordion-title uactitle" href="#">Rainbow</a>
+				<div class="uk-accordion-content">
+
+					<label><input id="RainbowState" class="uk-checkbox" type="checkbox" name="mode[1][]"> Enable</label><br>
+					<div class="uk-flex uk-margin">
+						<div uk-form-custom="target: > * > span:first-child">
+							<select>
+															 <option value="1">Normal</option>
+															 <option value="2">Slow</option>
+															 <option value="3">Very Slow</option>
+															 <option value="4">Fast</option>
+															 <option value="5">Very Fast</option>
+
+													 </select>
+							<button class="uk-button uk-light uk-button-default uk-button-small" type="button" tabindex="-1">
+															 <span></span>
+															 <span uk-icon="icon: chevron-down"></span>
+													 </button>
+						</div>
+					</div>
+				</div>
+			</li> -->
+		</ul>
+		</div>
+
+		<!-- JS -->
+		<script type="text/javascript" src="js\onecolor.js"></script>
+		<script type="text/javascript" src="js\colorjoe.js"></script>
+		<script type="text/javascript" src="js\scale.fix.js"></script>
+		<script src="socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="js\client.js"></script>
+		<script type="text/javascript" src="js\uikit.min.js"></script>
+		<script type="text/javascript" src="js\uikit-icons.js"></script>
+		<script type="text/javascript" src="js\jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js\ui.js"></script>
+</body>
+
+</html>

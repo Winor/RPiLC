@@ -1,0 +1,59 @@
+@media (max-width: 1000px) {
+  .logo {
+    height: 5px;
+    background-repeat: no-repeat;
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+}
+
+
+
+@media (min-width: 1000px) {
+  .colorbar {
+  	height: 5px;
+  	background: black;
+  }
+  .logo {
+  	background-image: url("/icons/rpilc-logo.png");
+  	height: 43px;
+  	background-repeat: no-repeat;
+  	margin-top: 10px;
+  	margin-left: 10px;
+  }
+}
+
+html {
+  background-color: #1d1d1d;
+}
+
+.uactitle {
+	background-color: #323232;
+	border: azure;
+	padding: 2px;
+	padding-left: 4px;
+}
+
+
+  input[name=selectui]{
+    display:none;
+}
+
+input[name=selectui] + label
+{
+    background: #000000;
+    height: 30px;
+    width: 30px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
+
+input[name=selectui]:checked + label
+{
+    border: 1px solid white;
+    box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}
