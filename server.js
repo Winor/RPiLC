@@ -98,11 +98,9 @@ function cval(c) {
   /*
   socketio
   list of possible emitted events:
-  connection - send all data for new clients
-  ----
-  csync - send a color code without emiting update event
-  fsync - send the slected color circle status and color list
-  hex - send a color code and emit update event
+  data - send all data for new clients
+  CycleSync - send color circle status and color list
+  updatecolor - send ColorVals
   */
   io.sockets.on('connection', function(socket) {
         winowatch.debug("New client Connected.");
