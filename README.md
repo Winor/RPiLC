@@ -4,7 +4,7 @@
 ![GitHub (pre-)release](https://img.shields.io/github/release/Winor/RPiLC/all.svg)
 [![Dependency Status](https://david-dm.org/Winor/RPiLC.svg)](https://david-dm.org/Winor/RPiLC)
 
-RPiLC let's you control your RGB led strip with a Raspberry Pi. RPiLC has a designed web app that allows you to control your RGB led strip from any device with style !
+RPiLC lets you control your RGB led strip with a Raspberry Pi. RPiLC has a designed web app that allows you to control your RGB led strip from any device with style!
 
 ![Imgur](https://i.imgur.com/Gg8tnId.png)
 
