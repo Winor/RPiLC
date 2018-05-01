@@ -41,6 +41,7 @@ let data = {
   Version: "0.1.5",
   type: 'desktop',
   description: "My Workstation",
+  state: "off",
   ColorVals: {
     CurrentHEX: '000000',
     CurrentRGB: {
@@ -63,6 +64,22 @@ let data = {
     state: false, // true / false
     colors: ['000000', '000000'],
     speed: 1000
+  }
+}
+
+function state() {
+  if (data.ColorVals.CurrentCName == "black") {
+    data.sate = "off";
+  } else {
+    data.sate = "on";
+  }
+}
+
+function statetoggle() {
+  if (data.state == "off") {
+    setcolor("white");
+  } else {
+    setcolor("black");
   }
 }
 
@@ -89,6 +106,7 @@ function cval(c) {
       data.ColorVals.CurrentHEX = color.hex;
       data.ColorVals.CurrentRGB = color.rgb;
       data.ColorVals.CurrentCName = color.name;
+      state();
       io.sockets.emit('updatecolor', data.ColorVals);
       winowatch.debug("Updated ColorVals to all clients.");
       gpiowrite(color.rgb.r, color.rgb.g, color.rgb.b);
