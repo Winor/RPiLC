@@ -116,10 +116,10 @@ function cval(c) {
         });
         // get cycle info from client
         socket.on('cycle', function(cycle) {
-            winowatch.debug("Got a list of colors to fade: " + cycle.colors + ". the state of the button is now " + cycle.state);
+            winowatch.debug("Got a list of colors to cycle: " + cycle.colors + ". Speed: " + cycle.speed + ". the state is now " + cycle.state);
             data.CycleMode.state = cycle.state;
             data.CycleMode.colors = cycle.colors;
-            // data.CycleMode.speed = cycle.speed;
+            data.CycleMode.speed = cycle.speed;
             io.sockets.emit('CycleSync', data.CycleMode);
             CycleModeTimer();
         });
