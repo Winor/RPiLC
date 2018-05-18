@@ -25,6 +25,7 @@ let clientdata = {
 function logic () {
   document.getElementById('servip').value = socket.io.engine.hostname;
   socket.on('data', function(data) {
+    document.getElementById('info').innerHTML = "RPiLC client v" + clientdata.Version + " connected to " + document.getElementById('servip').value + " running server v" + data.Version;
     clientdata.ColorVals = data.ColorVals;
     updatevalsinput(data.ColorVals);
    joe.setnu(data.ColorVals.CurrentHEX);
