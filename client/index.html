@@ -35,10 +35,11 @@
 		</div>
 	</div>
 
-	<div class="uk-flex-center uk-grid-small uk-light" uk-grid>
-		<p uk-margin>
-			<button onclick="turnoff()" class="uk-button uk-button-default uk-button-small">off</button>
-			<a class="uk-button uk-button-default uk-button-small" href="#settings" uk-toggle><span uk-icon="settings"></span></a>
+	<div class="uk-flex-center uk-grid-small" uk-grid>
+		<div>
+			<button onclick="togglestate()" class="uk-button uk-button-secondary uk-button-small"><span uk-icon="bolt"></span></button>
+			<a class="uk-button uk-button-secondary uk-button-small" href="#settings" uk-toggle><span uk-icon="settings"></span></a>
+		</div>
 
 			<div id="settings" uk-modal>
 				<div class="uk-modal-dialog">

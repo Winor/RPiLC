@@ -88,10 +88,8 @@ function sethexval() {
   emitcolor(document.getElementById('hex').value);
 }
 
-function turnoff() {
-  $('#CycleState').prop('checked', false).change();
-  fade();
-  socket.emit('done', "black");
+function togglestate() {
+  socket.emit('togglestate');
 };
 
 function fade() {

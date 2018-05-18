@@ -75,11 +75,11 @@ function state() {
   }
 }
 
-function statetoggle() {
-  if (data.state == "off") {
-    setcolor("white");
-  } else {
+function chgstate() {
+  if (data.sate == "on") {
     setcolor("black");
+  } else {
+    setcolor("white");
   }
 }
 
@@ -185,5 +185,16 @@ function cval(c) {
             }
           }, data.CycleMode.speed);
         }
+      }
+
+      // on off toggle
+      function togglestate() {
+        if (data.CycleMode.state) {
+          data.CycleMode.state = false;
+          winowatch.debug("CycleMode state is now " + data.CycleMode.state);
+          io.sockets.emit('CycleSync', data.CycleMode);
+          CycleModeTimer();
+        }
+        chgstate();
       }
       winowatch.info('ready.');
