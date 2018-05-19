@@ -19,6 +19,10 @@ const Gpio = require('pigpio').Gpio,
     mode: Gpio.OUTPUT
   });
 
+  red.digitalWrite(0);
+  green.digitalWrite(0);
+  blue.digitalWrite(0);
+
 // function to write PWM value
 function gpiowrite(r, g, b) {
   red.pwmWrite(r);
