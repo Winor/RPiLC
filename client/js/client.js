@@ -31,7 +31,8 @@ function logic () {
    joe.setnu(data.ColorVals.CurrentHEX);
    document.getElementById('colorbar').style.background = "#"+data.ColorVals.CurrentHEX;
    $('#CycleState').prop('checked', data.CycleMode.state);
-   document.getElementById("cyclespeed").value = data.CycleMode.speed
+   document.getElementById("cyclespeed").value = data.CycleMode.speed;
+   document.getElementById("cycleeffect").value = data.CycleMode.effect;
    upcolorslist(data.CycleMode.colors);
  });
 
@@ -44,7 +45,8 @@ function logic () {
 
  socket.on('CycleSync', function(CycleMode) {
    $('#CycleState').prop('checked', CycleMode.state);
-   document.getElementById("cyclespeed").value = CycleMode.speed
+   document.getElementById("cyclespeed").value = CycleMode.speed;
+   document.getElementById("cycleeffect").value = CycleMode.effect;
    upcolorslist(CycleMode.colors);
  });
 }
@@ -96,7 +98,8 @@ function fade() {
   let CycleMode = {
     state: document.getElementById("CycleState").checked, // true / false
     colors: Object.values(cylclr),
-    speed: document.getElementById("cyclespeed").value
+    speed: document.getElementById("cyclespeed").value,
+    effect: document.getElementById("cycleeffect").value
   }
   socket.emit('cycle', CycleMode);
 };

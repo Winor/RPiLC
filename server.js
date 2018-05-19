@@ -58,16 +58,12 @@ let data = {
   CycleMode: {
     state: false, // true / false
     colors: ['#be0000', '#beb500', '#21be00', '#0051be'],
-    speed: 8000
+    speed: 8000,
+    effect: "fade"
   },
   RainbowMode: {
     state: false, // true / false
     speed: 6000
-  },
-  FlashMode: {
-    state: false, // true / false
-    colors: ['000000', '000000'],
-    speed: 1000
   }
 }
 
@@ -138,12 +134,16 @@ function cval(c) {
         });
         // get cycle info from client
         socket.on('cycle', function(cycle) {
-            winowatch.debug("Got a list of colors to cycle: " + cycle.colors + ". Speed: " + cycle.speed + ". the state is now " + cycle.state);
+            winowatch.debug("Got a list of colors to "+ cycle.effect + ": " + cycle.colors + ". Speed: " + cycle.speed + ". the state is now " + cycle.state);
             data.CycleMode.state = cycle.state;
             data.CycleMode.colors = cycle.colors;
             data.CycleMode.speed = cycle.speed;
+            data.CycleMode.effect = cycle.effect;
             io.sockets.emit('CycleSync', data.CycleMode);
-            CycleModeTimer();
+            CycleModeSwitch(cycle.effect);
+        });
+        socket.on('togglestate', function(val) {
+          togglestate();
         });
         });
       // fade logic
@@ -169,18 +169,70 @@ function cval(c) {
           })(i);
         };
       }
+      //smooth logic
+      function smooth(colors) {
+        const tinygradient = require("tinygradient");
+        let clist = colors.slice();
+        clist.push(colors[0]);
+        console.log(clist);
+        yi = 0;
+        let stimer = setInterval(function() {
+
+          if (data.CycleMode.state == false) {
+            clearInterval(stimer)
+            return;
+          }
+
+          let gradient = tinygradient(clist);
+          const steps = gradient.rgb(110);
+          let color = tinycolor(steps[yi]);
+          let rgbs = color.toRgb();
+          setcolor(rgbs);
+
+          yi++;
+
+          if (yi == steps.length) {
+            yi = 0;
+            winowatch.debug('finished a circle!!');
+          }
+        }, data.CycleMode.speed / 50);
+      }
+      // CycleMode switch
+      function CycleModeSwitch(mode) {
+        switch (mode) {
+          case "fade":
+            StepCounter(mode);
+            break;
+            case "flash":
+              StepCounter(mode);
+              break;
+              case "smooth":
+                smooth(data.CycleMode.colors);
+                break;
+          default:
+            StepCounter(mode);
+        }
+      }
       // Cycle timer
-      function CycleModeTimer() {
+      function StepCounter(mode) {
         if (data.CycleMode.state) {
           xi = 0;
           let timer = setInterval(function() {
 
-            if (data.CycleMode.state == false) {
+            if (data.CycleMode.state == false || data.CycleMode.effect == "smooth") {
               clearInterval(timer)
               return;
             }
-
-            fade(data.CycleMode.colors[xi]);
+          switch (mode) {
+            case "fade":
+              fade(data.CycleMode.colors[xi]);
+              break;
+              case "flash":
+                setcolor(data.CycleMode.colors[xi]);
+                break;
+            default:
+              fade(data.CycleMode.colors[xi]);
+          }
             xi++;
 
             if (xi == data.CycleMode.colors.length) {
@@ -197,7 +249,6 @@ function cval(c) {
           data.CycleMode.state = false;
           winowatch.debug("CycleMode state is now " + data.CycleMode.state);
           io.sockets.emit('CycleSync', data.CycleMode);
-          CycleModeTimer();
         }
         chgstate();
       }
