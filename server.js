@@ -42,7 +42,7 @@ server.listen(config.webserverport);
 app.use(express.static(config.webdir));
 
 let data = {
-  Version: "0.1.5",
+  Version: "0.2.0",
   type: 'desktop',
   description: "My Workstation",
   state: "off",
