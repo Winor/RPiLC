@@ -13,9 +13,9 @@
     "type": "git",
     "url": "https://github.com/Winor/RPiLC.git"
   },
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "sudo node server.js"
+    "start": "sudo node index.js"
   },
   "engines": {
     "node": "> 0.10.29"
