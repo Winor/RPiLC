@@ -4,5 +4,5 @@
   "bluegpio": "24",
   "webserverport": "80",
   "webdir": "client",
-  "debug": true
+  "debug": false
 }
