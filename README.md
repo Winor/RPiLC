@@ -40,7 +40,7 @@ Edit config.json to match your setup
 #### 3. Run
 
 ```
-sudo node server.js
+sudo node index.js
 ```
 
 ## TODO
