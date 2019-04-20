@@ -7,13 +7,13 @@ const config = JSON.parse(configfile);
 logger.debug('Config File Loaded.');
 // require pigpio and set PWM gpio numbers
 const Gpio = require('pigpio').Gpio,
-  red = new Gpio(config.redgpio, {
+  red = new Gpio(config.gpio_pin.red, {
     mode: Gpio.OUTPUT
   }),
-  green = new Gpio(config.greengpio, {
+  green = new Gpio(config.gpio_pin.red, {
     mode: Gpio.OUTPUT
   }),
-  blue = new Gpio(config.bluegpio, {
+  blue = new Gpio(config.gpio_pin.red, {
     mode: Gpio.OUTPUT
   });
 // set value to zero

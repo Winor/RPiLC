@@ -12,8 +12,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 // web server start
-server.listen(config.webserverport);
-app.use(express.static(config.webdir));
+server.listen(config.server_settings.webserverport);
+app.use(express.static(config.server_settings.webdir));
 
 module.exports = function (action, data) {
   log.debug("action_name: "+action);

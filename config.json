@@ -1,8 +1,12 @@
 {
-  "redgpio": "17",
-  "greengpio": "22",
-  "bluegpio": "24",
-  "webserverport": "80",
-  "webdir": "client",
-  "debug": false
+  "gpio_pin":{
+    "red": "17",
+    "green": "22",
+    "blue": "24"
+  },
+  "server_settings":{
+    "webserverport": "80",
+    "webdir": "client",
+    "debug": false
+  }
 }

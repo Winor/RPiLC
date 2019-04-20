@@ -20,13 +20,13 @@ module.exports.info = function(msg) {
 }
 
 module.exports.debug = function(msg) {
-  if (config.debug) {
+  if (config.server_settings.debug) {
     console.log(getdate() + "\x1b[35m", "[debug]", "\x1b[0m" + "" + msg);
   }
 }
 
 module.exports.data = function(msg) {
-  if (config.debug) {
+  if (config.server_settings.debug) {
     console.log(getdate() + "\x1b[35m", "[debug]", "\x1b[0m" + "" + JSON.stringify(msg, null, 2));
   }
 }
