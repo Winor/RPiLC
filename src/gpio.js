@@ -10,10 +10,10 @@ const Gpio = require('pigpio').Gpio,
   red = new Gpio(config.gpio_pin.red, {
     mode: Gpio.OUTPUT
   }),
-  green = new Gpio(config.gpio_pin.red, {
+  green = new Gpio(config.gpio_pin.green, {
     mode: Gpio.OUTPUT
   }),
-  blue = new Gpio(config.gpio_pin.red, {
+  blue = new Gpio(config.gpio_pin.blue, {
     mode: Gpio.OUTPUT
   });
 // set value to zero
