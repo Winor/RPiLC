@@ -33,9 +33,9 @@ cval: function (c) {
       data.ColorVals.CurrentRGB = color.rgb;
       data.ColorVals.CurrentCName = color.name;
       if (data.ColorVals.CurrentCName == "black") {
-        data.sate = "off";
+        data.state = "off";
       } else {
-        data.sate = "on";
+        data.state = "on";
       }
       sioserver('updatecolor', data.ColorVals);
       logger.debug("Updated ColorVals to all clients.");
