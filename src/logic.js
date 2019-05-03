@@ -5,6 +5,8 @@ const gpio = require('./gpio.js');
 const sioserver = require('./sioserver.js');
 let data = require("./data.js");
 const fs = require("fs");
+const configfile = fs.readFileSync("config.json");
+const config = JSON.parse(configfile);
 const tinycolor = require("tinycolor2");
 
 // CODE
@@ -48,7 +50,7 @@ cval: function (c) {
     if (data.state == "on") {
       this.setcolor("black");
     } else {
-      this.setcolor("white");
+      this.setcolor(config.RPiLC_settings.on_color);
     }
   }
 }
