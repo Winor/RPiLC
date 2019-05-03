@@ -41,4 +41,25 @@ io.sockets.on('connection', function(socket) {
   socket.on('togglestate', action.togglestate);
 });
 
+let data = require("./data.js");
+
+//api
+app.get('/api/status', function(req, res) {
+  log.debug("[API] - Status");
+  res.json(data)
+})
+
+app.get('/api/togglestate', function(req, res) {
+  log.debug("[API] - Toggle state");
+  action.togglestate();
+  res.json(data)
+})
+
+app.get('/api/set/:color/', function(req, res) {
+log.debug("[API] - Set Color " + req.params.color);
+action.done(req.params.color);
+res.json(data)
+})
+
+action.done(config.RPiLC_settings.startupcolor);
 log.info('Server Ready.');
