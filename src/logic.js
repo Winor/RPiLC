@@ -45,7 +45,7 @@ cval: function (c) {
 
 
    chgstate: function() {
-    if (data.sate == "on") {
+    if (data.state == "on") {
       this.setcolor("black");
     } else {
       this.setcolor("white");
