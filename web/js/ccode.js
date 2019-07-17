@@ -1,1 +1,0 @@
-var nowcolor ="#000000"
