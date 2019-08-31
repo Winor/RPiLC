@@ -1,7 +1,7 @@
 let val = document.getElementById('rgbValue');
 let joe = colorjoe.rgb('rgbPicker', "black")
 let socket = io.connect();
-logic();
+
 
 function swichserver(ip) {
 socket = io.connect("http://"+ip, {"force new connection": true});
@@ -9,58 +9,58 @@ logic();
 }
 
 let clientdata = {
-  Version: "0.2.0",
+  Version: "1.0.0",
   type: 'Client',
-  ColorVals: {
-    CurrentHEX: '000000',
-    CurrentRGB: {
-      r: 0,
-      g: 0,
-      b: 0
-    },
-    CurrentCName: 'black'
-  }
 }
 
-function logic () {
-  document.getElementById('servip').value = socket.io.engine.hostname;
+let ServerData;
+
+let logic = function  () {
+
   socket.on('data', function(data) {
+    ServerData = data;
     document.getElementById('info').innerHTML = "RPiLC client v" + clientdata.Version + " connected to " + document.getElementById('servip').value + " running server v" + data.Version;
-    clientdata.ColorVals = data.ColorVals;
-    updatevalsinput(data.ColorVals);
+    document.getElementById('servip').value = socket.io.engine.hostname;
+    UpdateColorValsInput(data.ColorVals);
    joe.setnu(data.ColorVals.CurrentHEX);
-   document.getElementById('colorbar').style.background = "#"+data.ColorVals.CurrentHEX;
-   $('#CycleState').prop('checked', data.CycleMode.state);
-   document.getElementById("cyclespeed").value = data.CycleMode.speed;
-   document.getElementById("cycleeffect").value = data.CycleMode.effect;
-   upcolorslist(data.CycleMode.colors);
+   upcolors(data.SavedColors)
+   UpdateColorBar(data);
+   UpdateCycleMode(data.CycleMode);
+
  });
 
  socket.on('updatecolor', function(c) {
-   clientdata.ColorVals = c;
-   updatevalsinput(c);
-   document.getElementById('colorbar').style.background = "#"+c.CurrentHEX;
+   ServerData.ColorVals = c;
    joe.setnu(c.CurrentHEX);
+   UpdateColorBar(ServerData);
+   UpdateColorValsInput(c);
  });
 
  socket.on('CycleSync', function(CycleMode) {
-   $('#CycleState').prop('checked', CycleMode.state);
-   document.getElementById("cyclespeed").value = CycleMode.speed;
-   document.getElementById("cycleeffect").value = CycleMode.effect;
-   upcolorslist(CycleMode.colors);
+   UpdateCycleMode(CycleMode);
  });
+
+ socket.on('SaveColor', function(SavedColors) {
+   ServerData.SavedColors = SavedColors;
+   upcolors(SavedColors)
+ });
+
 }
 
 joe.on('change', function(c) {
-  document.getElementById('colorbar').style.background = c.hex();
-  let cred = Math.round(255 * c.red());
-  let cgreen = Math.round(255 * c.green());
-  let cblue = Math.round(255 * c.blue());
-  socket.emit('change', {
-    r: cred,
-    g: cgreen,
-    b: cblue
-  });
+  let data ={
+  ColorVals: {
+  CurrentRGB: {
+    r:Math.round(255 * c.red()),
+    g: Math.round(255 * c.green()),
+    b: Math.round(255 * c.blue())
+  },
+  CurrentHEX: c.hex().replace(/#/g, '')
+}
+}
+
+  UpdateColorBar(data);
+  socket.emit('change', data.ColorVals.CurrentRGB);
 })
 
 joe.on('done', function(c) {
@@ -71,12 +71,7 @@ function emitcolor(color) {
   socket.emit('done', color);
 }
 
-function updatevalsinput(c) {
-  document.getElementById('r').value = c.CurrentRGB.r;
-  document.getElementById('g').value = c.CurrentRGB.g;
-  document.getElementById('b').value = c.CurrentRGB.b;
-  document.getElementById('hex').value = c.CurrentHEX;
-}
+
 
 function setrgbval() {
   emitcolor({
@@ -104,4 +99,39 @@ function fade() {
   socket.emit('cycle', CycleMode);
 };
 
+function UpdateUIelements() {
+
+
+
+}
+
+function UpdateCycleMode(CycleMode) {
+  UpdateColorCycleListUI(CycleMode.colors);
+  $('#CycleState').prop('checked', CycleMode.state);
+  console.log(CycleMode.speed);
+  document.getElementById("cyclespeed").value = CycleMode.speed;
+  document.getElementById("cycleeffect").value = CycleMode.effect;
+
+}
+
+function UpdateColorBar(data){
+ document.getElementById('colorbar').style.background = "#"+data.ColorVals.CurrentHEX;
+  // document.getElementById('logo').style.stroke = "#"+data.ColorVals.CurrentHEX;
+  document.getElementById('R').style.fill = "rgb(" + data.ColorVals.CurrentRGB.r+", 0, 0)";
+  document.getElementById('R').style.stroke = "rgb(" + data.ColorVals.CurrentRGB.r+", 0, 0)";
+  document.getElementById('G').style.fill = "rgb(0,"+ data.ColorVals.CurrentRGB.g+ ",0)";
+  document.getElementById('G').style.stroke = "rgb(0,"+ data.ColorVals.CurrentRGB.g+ ",0)";
+  document.getElementById('B').style.fill = "rgb(0,0," + data.ColorVals.CurrentRGB.b+ ")";
+  document.getElementById('B').style.stroke = "rgb(0,0," + data.ColorVals.CurrentRGB.b+ ")";
+}
+
+function UpdateColorValsInput(c) {
+  document.getElementById('r').value = c.CurrentRGB.r;
+  document.getElementById('g').value = c.CurrentRGB.g;
+  document.getElementById('b').value = c.CurrentRGB.b;
+  document.getElementById('hex').value = c.CurrentHEX;
+}
+
+
 console.log('ready');
+logic();
