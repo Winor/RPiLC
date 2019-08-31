@@ -45,7 +45,7 @@ cval: function (c) {
       gpio(color.rgb.r, color.rgb.g, color.rgb.b);
     }
     clearTimeout(SaveTimer);
-    SaveTimer =  setTimeout(() => SaveColor(data.ColorVals.CurrentHEX), 70);
+    SaveTimer =  setTimeout(() => SaveColor(data.ColorVals.CurrentHEX), 7000);
   },
 
    chgstate: function() {
