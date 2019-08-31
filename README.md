@@ -6,16 +6,18 @@
 
 RPiLC lets you control your RGB led strip with a Raspberry Pi. RPiLC has a designed web app that allows you to control your RGB led strip from any device with style!
 
-![Imgur](https://i.imgur.com/Gg8tnId.png)
+![Imgur](https://i.imgur.com/00O4qHE.png)
 
 ## Features
 * Live color preview as you move the color picker
 * Multiple clients can be opened simultaneously
-* Connect to multiple RPiLC servers from one client
+* control multiple RPiLC servers from one client
 * Cycle between selected colors
+* Recently used colors
 * Web controlled, clean design
 * iOS web app support
 * Touch ready UI
+* API
 
 ## Prerequisites
 In order to use this app you need:
@@ -42,7 +44,41 @@ Edit config.json to match your setup
 ```
 sudo node index.js
 ```
+## Run RPiLC on startup using pm2
+You can start RPiLC on startup by following these steps:
+### 1. Install pm2
+```
+sudo npm install pm2@latest -g
+```
+### 2. Add RPiLC to pm2
+```
+cd [RPiLC location]
+sudo pm2 start index.js --name RPiLC
+```
+### 3. Make pm2 run on startup
+```
+sudo pm2 startup
+```
 
+## API
+### Status
+```
+http://RPiLC-Address/status
+```
+Will return status in JSON format
+### Toggle State
+```
+http://RPiLC-Address/togglestate
+```
+Will turn the LED strip on or off & return status in JSON format
+### Set Color
+```
+http://RPiLC-Address/color
+```
+Accepts hex value, rgb(x, x, x) and color name.
+Will set the LED strip color & return status in JSON format
+## Apple Shortcuts
+You can use this [Siri shortcut](https://www.icloud.com/shortcuts/4746aadabf974abbae066326c69e8c3a) to toggle your LED strip using your Apple device.
 ## TODO
 You can see what I plan to do next at my [trello list](https://trello.com/b/78vXfIeE), might be a little messy, sorry :P
 
@@ -53,4 +89,4 @@ You can see what I plan to do next at my [trello list](https://trello.com/b/78vX
 
 ## License
 
-This project is licensed under the MIT License
+This project is licensed under Apache License 2.0
