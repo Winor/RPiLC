@@ -4,6 +4,7 @@ module.exports = {
   type: 'desktop',
   description: "My Workstation",
   state: "off",
+  SavedColors: [],
   ColorVals: {
     CurrentHEX: '#000000',
     CurrentRGB: {

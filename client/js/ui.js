@@ -1,15 +1,8 @@
 fixScale(document);
-// the selector will match all input controls of type :checkbox
-// and attach a click event handler
 $("input:checkbox").on('click', function() {
-  // in the handler, 'this' refers to the box clicked on
   let $box = $(this);
   if ($box.is(":checked")) {
-    // the name of the box is retrieved using the .attr() method
-    // as it is assumed and expected to be immutable
     let group = "input:checkbox[name='" + $box.attr("name") + "']";
-    // the checked state of the group/box on the other hand will change
-    // and the current value is retrieved using .prop() method
     $(group).prop("checked", false);
     $box.prop("checked", true);
       fade();
@@ -19,10 +12,11 @@ $("input:checkbox").on('click', function() {
   }
 });
 
-
 // color cycle select  UI
 let x = 4;
+let y = 4;
 let cylclr = {};
+let cylclrx = {};
 
 function addcolor() {
   x++;
@@ -40,11 +34,11 @@ function removecolor() {
 function setcolor() {
   let thebtn = $('input[name=selectui]:checked').attr('id');
   let thebtnnum = thebtn.replace(/\D/g, '');
-  cylclr[thebtnnum] = "#"+clientdata.ColorVals.CurrentHEX;
-  document.getElementById("c" + thebtnnum).style.background = "#"+clientdata.ColorVals.CurrentHEX;
+  cylclr[thebtnnum] = "#"+ServerData.ColorVals.CurrentHEX;
+  document.getElementById("c" + thebtnnum).style.background = "#"+ServerData.ColorVals.CurrentHEX;
 }
 
-function upcolorslist(list) {
+function UpdateColorCycleListUI(list) {
   $('#CycleStatecui').html(" ");
   x = -1;
   cylclr = {};
@@ -53,4 +47,29 @@ function upcolorslist(list) {
     addcolor();
     document.getElementById("c" + i).style.background = list[i];
   }
+}
+
+function addupcolors() {
+  y++;
+  let htmz = '<div onclick = "SetcolorFromList()" id="color' + y + 'dv"> <input type="radio" id="color' + y + '" name="cselectui"/> <label id="cs' + y + '" for="color' + y + '"></label></div>'
+  $("#resentcolorui").append(htmz);
+}
+
+function upcolors(list) {
+  $('#resentcolorui').html(" ");
+  y = -1;
+  cylclrx = {};
+  for (i = 0; i < list.length; i++) {
+    cylclrx[i] = list[i];
+    addupcolors();
+    document.getElementById("cs" + i).style.background = list[i];
+  }
+}
+
+function SetcolorFromList() {
+  let thebtn = $('input[name=cselectui]:checked').attr('id');
+  let thebtnnum = thebtn.replace(/\D/g, '');
+ console.log(thebtnnum);
+emitcolor(ServerData.SavedColors[thebtnnum])
+
 }

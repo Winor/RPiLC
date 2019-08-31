@@ -10,7 +10,7 @@
     "debug": false
   },
   "RPiLC_settings":{
-    "startupcolor": "black",
-    "on_color": "white"
+    "startupcolor": "#000000",
+    "on_color": "#ffffff"
   }
 }
