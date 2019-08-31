@@ -1,59 +1,110 @@
-@media (max-width: 1000px) {
-  .logo {
-    height: 5px;
-    background-repeat: no-repeat;
-    margin-top: 10px;
-    margin-left: 10px;
-  }
-}
+ @media (max-width: 600px) {
+   .logo {
+     height: 5px;
+     margin-top: 10px;
+     margin-left: 10px;
+     visibility: hidden;
+   }
 
+   .colorPicker .twod, .colorPicker .twod .bg {
+     width: 240px !important;
+   }
 
+   .colorPicker .oned, .colorPicker .oned .bg, .colorPicker .oned .pointer .shape {
+     width: 40px !important;
+   }
+ }
 
-@media (min-width: 1000px) {
-  .colorbar {
-  	height: 5px;
-  	background: black;
-  }
-  .logo {
-  	background-image: url("/icons/rpilc-logo.png");
-  	height: 43px;
-  	background-repeat: no-repeat;
-  	margin-top: 10px;
-  	margin-left: 10px;
-  }
-}
+ @media (min-width: 600px) {
+   .colorPicker .twod, .colorPicker .twod .bg {
+     width: 340px !important;
+   }
 
-html {
-  background-color: #1d1d1d;
-}
+   .colorPicker .oned, .colorPicker .oned .bg, .colorPicker .oned .pointer .shape {
+     width: 30px !important;
+   }
 
-.uactitle {
-	background-color: #323232;
-	border: azure;
-	padding: 2px;
-	padding-left: 4px;
-}
+   .colorbar {
+     height: 5px;
+     background: black;
+   }
 
+   .logo {
+     width: 50px;
+     margin-top: 10px;
+     margin-left: 10px;
+     stroke-width: 5px;
+     stroke: #a1a1a1;
+   }
+ }
 
-  input[name=selectui]{
-    display:none;
-}
+ html {
+   background-color: #1d1d1d;
+ }
 
-input[name=selectui] + label
-{
-    background: #000000;
-    height: 30px;
-    width: 30px;
-    display:inline-block;
-    padding: 0 0 0 0px;
-}
+ .uactitle {
+   padding: 5px;
+   border: 5px;
+   padding: 5px;
+   border-bottom: 1px solid #323232;
+ }
 
-input[name=selectui]:checked + label
-{
-    border: 1px solid white;
-    box-sizing: border-box;
+ input[name=selectui] {
+   display: none;
+ }
+
+ input[name=selectui]+label {
+   background: #000000;
+   height: 30px;
+   width: 30px;
+   display: inline-block;
+   padding: 0 0 0 0px;
+ }
+
+ input[name=selectui]:hover+label {
+   border: 1px solid gray;
+   box-sizing: border-box;
    -moz-box-sizing: border-box;
    -webkit-box-sizing: border-box;
-    display:inline-block;
-    padding: 0 0 0 0px;
-}
+   display: inline-block;
+   padding: 0 0 0 0px;
+ }
+
+ input[name=selectui]:checked+label {
+   border: 1px solid white;
+   box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+   display: inline-block;
+   padding: 0 0 0 0px;
+ }
+
+ input[name=cselectui] {
+   display: none;
+ }
+
+ input[name=cselectui]+label {
+   background: #000000;
+   height: 30px;
+   width: 30px;
+   display: inline-block;
+   padding: 0 0 0 0px;
+ }
+
+ input[name=cselectui]:checked+label {
+   border: 1px solid white;
+   box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+   display: inline-block;
+   padding: 0 0 0 0px;
+ }
+
+ input[name=cselectui]:hover+label {
+   border: 1px solid gray;
+   box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+   display: inline-block;
+   padding: 0 0 0 0px;
+ }

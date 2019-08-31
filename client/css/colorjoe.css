@@ -11,10 +11,7 @@
 }
 
 .colorPicker {
-	background: #303030;
-	border: 1px solid #1b1b1b;
-	-moz-border-radius: .3em;
-	/* border-radius: .3em; */
+	background: #323232;
 	margin: 1em;
 	display: inline-block;
 }
