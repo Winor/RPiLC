@@ -69,11 +69,16 @@ function SaveColor() {
   logger.debug("is not in CycleMode: " + (data.CycleMode.state != true));
   logger.debug("is not in SavedColors list: " + (data.SavedColors.includes("#" + data.ColorVals.CurrentHEX) == false));
   logger.debug("is not on_color: " + (config.RPiLC_settings.on_color != "#" + data.ColorVals.CurrentHEX));
-  if ((data.state !== "off") && (data.CycleMode.state != true) && (data.SavedColors.includes("#" + data.ColorVals.CurrentHEX) == false) && (config.RPiLC_settings.on_color != "#" + data.ColorVals.CurrentHEX)) {
+  if (data.SavedColors.includes("#" + data.ColorVals.CurrentHEX)) {
+    data.SavedColors = data.SavedColors.filter(e => e !== "#" + data.ColorVals.CurrentHEX);
     data.SavedColors.unshift( "#" + data.ColorVals.CurrentHEX);
-    if (data.SavedColors.length == 19) {
-      data.SavedColors.splice(-1,1)
-      logger.debug("removed latest color from SavedColors");
+    sioserver('SaveColor', data.SavedColors);
+
+    } else if ((data.state !== "off") && (data.CycleMode.state != true) && (config.RPiLC_settings.on_color != "#" + data.ColorVals.CurrentHEX)) {
+      data.SavedColors.unshift( "#" + data.ColorVals.CurrentHEX);
+      if (data.SavedColors.length == 19) {
+        data.SavedColors.splice(-1,1)
+        logger.debug("removed latest color from SavedColors");
     }
     sioserver('SaveColor', data.SavedColors);
   }
