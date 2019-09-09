@@ -1,6 +1,6 @@
 'use strict'
 module.exports = {
-  Version: "1.2.3",
+  Version: "1.2.4",
   type: 'desktop',
   description: "My Workstation",
   state: "off",
