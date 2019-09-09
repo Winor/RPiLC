@@ -13,9 +13,11 @@ module.exports = {
     logger.debug("Sent data to new client.");
   },
   change: function(c) {
+    logic.turnoffcycle();
     gpio(c.r, c.g, c.b);
   },
   done: function(val) {
+    logic.turnoffcycle();
     logic.setcolor(val);
   },
   cycle: function(cycle) {

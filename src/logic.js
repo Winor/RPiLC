@@ -54,6 +54,13 @@ cval: function (c) {
     } else {
       this.setcolor(config.RPiLC_settings.on_color);
     }
+  },
+  turnoffcycle: function () {
+    if (data.CycleMode.state) {
+      data.CycleMode.state = false;
+      logger.debug("CycleMode state is now " + data.CycleMode.state);
+      sioserver('CycleSync', data.CycleMode);
+    }
   }
 }
 
