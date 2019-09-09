@@ -55,6 +55,12 @@ app.get('/api/togglestate', function(req, res) {
   res.json(data)
 })
 
+app.get('/api/togglecycle', function(req, res) {
+  log.debug("[API] - Toggle cycle");
+  action.togglecycle();
+  res.json(data)
+})
+
 app.get('/api/set/:color/', function(req, res) {
 log.debug("[API] - Set Color " + req.params.color);
 action.done(req.params.color);
