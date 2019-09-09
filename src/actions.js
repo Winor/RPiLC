@@ -31,6 +31,11 @@ module.exports = {
       sioserver('CycleSync', data.CycleMode);
     }
     logic.chgstate();
+  },
+  togglecycle: function () {
+    data.CycleMode.state = !data.CycleMode.state;
+    logger.debug("CycleMode state is now " + data.CycleMode.state);
+    sioserver('CycleSync', data.CycleMode);
   }
 
 }
