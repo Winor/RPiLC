@@ -17,11 +17,11 @@
 
  @media (min-width: 600px) {
    .colorPicker .twod, .colorPicker .twod .bg {
-     width: 340px !important;
+     width: 330px !important;
    }
 
    .colorPicker .oned, .colorPicker .oned .bg, .colorPicker .oned .pointer .shape {
-     width: 30px !important;
+     width: 45px !important;
    }
 
    .colorbar {

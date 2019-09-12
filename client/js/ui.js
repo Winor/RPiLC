@@ -69,7 +69,6 @@ function upcolors(list) {
 function SetcolorFromList() {
   let thebtn = $('input[name=cselectui]:checked').attr('id');
   let thebtnnum = thebtn.replace(/\D/g, '');
- console.log(thebtnnum);
 emitcolor(ServerData.SavedColors[thebtnnum])
 
 }

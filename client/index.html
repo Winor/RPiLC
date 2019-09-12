@@ -11,7 +11,7 @@
 	<meta name="apple-mobile-web-app-title" content="RPiLC">
 	<!-- icons -->
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-	<link rel="icon" type="image/png" href="icons\favicon96x96.png" sizes="96x96">
+	<link rel="icon" type="image/png" href="iphone-favicon120x120.png" sizes="120x120">
 	<link rel="apple-touch-icon" href="iphone-favicon120x120.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="icons\iphone-favicon180x180.png">
 	<link rel="apple-touch-icon" sizes="120x120" href="icons\iphone-favicon120x120.png">
@@ -203,11 +203,73 @@
 
 			</div>
 			<div class="uk-modal-footer uk-text-right uk-background-secondary">
+				<button class="uk-button uk-button-default" type="button" href="#config" uk-toggle>Config</button>
 				<button class="uk-button uk-button-default uk-modal-close" type="button">close</button>
 			</div>
 
 		</div>
 	</div>
+
+	<div id="config" class="uk-light uk-modal-full uk-background-secondary" uk-modal>
+			<div class=" uk-background-secondary uk-container">
+				<button class="uk-modal-close-default uk-background-secondary" id="close0" type="button" uk-close></button>
+				<div class="uk-modal-header uk-background-secondary">
+					<h2 class="uk-modal-title" id="welcome">RPiLC Server Setings</h2>
+				</div>
+				<div class="uk-modal-body uk-background-secondary">
+					<h6 class="uk-heading-line"><span>GPIO Pin nums</span></h6>
+					<div class="uk-grid-small uk-margin" uk-grid>
+						
+						<div class="uk-width-1-4@s">
+						<label class="uk-form-label" for="rp">Red pin:</label>
+						<input id="rp" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="17">
+					   </div>
+	
+					   <div class="uk-width-1-4@s">
+						<label class="uk-form-label" for="bp">Blue pin:</label>
+						<input id="bp" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="22">
+					</div>
+					<div class="uk-width-1-4@s">
+						<label class="uk-form-label" for="gp">Green pin:</label>
+						<input id="gp" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="24">
+					</div>
+
+					</div>
+					<h6 class="uk-heading-line"><span>Backend settings</span></h6>
+					<div class="uk-grid-small uk-margin" uk-grid>
+					<div class="">
+						<label class="uk-form-label" for="serverport">Server port:</label>
+						<input id="serverport" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="80">
+						<div class="uk-margin">
+						<label><input id="debug" class="uk-checkbox" type="checkbox"> Debug Mode</label>
+						</div>
+						
+					</div>
+
+
+					
+
+						</div>
+						<h6 class="uk-heading-line"><span>RPiLC Setings</span></h6>
+					<div class="uk-grid-small uk-margin" uk-grid>
+						<div class="uk-width-1-4@s">
+						<label class="uk-form-label" for="startupcolor">startupcolor:</label>
+						<input id="startupcolor" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="#HEX">
+					</div>
+					<div class="uk-width-1-4@s">
+						<label class="uk-form-label" for="oncolor">oncolor:</label>
+						<input id="oncolor" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="#HEX">
+						</div>
+					</div>
+	
+				</div>
+				<div class="uk-modal-footer uk-text-right uk-background-secondary">
+					<button id="close1" class="uk-button uk-button-default uk-modal-close" type="button">close</button>
+					<button class="uk-button uk-button-primary" onclick="config()" type="button">Apply</button>
+				</div>
+	
+			</div>
+		</div>
 
 
 

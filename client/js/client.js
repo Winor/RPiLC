@@ -9,7 +9,7 @@ logic();
 }
 
 let clientdata = {
-  Version: "1.0.0",
+  Version: "1.2.4",
   type: 'Client',
 }
 
@@ -28,6 +28,10 @@ let logic = function  () {
    UpdateCycleMode(data.CycleMode);
 
  });
+
+ socket.on('config', function(config) {
+UpdateConfigUI(config);
+});
 
  socket.on('updatecolor', function(c) {
    ServerData.ColorVals = c;
@@ -99,16 +103,38 @@ function fade() {
   socket.emit('cycle', CycleMode);
 };
 
-function UpdateUIelements() {
+function UpdateConfigUI(config) {
+  if (config.AutoGen) {
+    UIkit.modal("#config").show();
+    document.getElementById('welcome').innerHTML= "Welcome to RPiLC - Install";
+    document.getElementById('close0').style.visibility = "hidden";
+    document.getElementById('close1').style.visibility = "hidden"; 
+  }
+  document.getElementById('rp').value = config.gpio_pin.red;
+  document.getElementById('gp').value = config.gpio_pin.green;
+  document.getElementById('bp').value = config.gpio_pin.blue;
+  document.getElementById('serverport').value = config.server_settings.webserverport;
+  $('#debug').prop('checked', config.server_settings.debug);
+  document.getElementById('startupcolor').value = config.RPiLC_settings.startupcolor;
+  document.getElementById('oncolor').value = config.RPiLC_settings.on_color;
+}
 
-
-
+function config() {
+  let config = {}
+  config.red = document.getElementById('rp').value
+  config.green = document.getElementById('gp').value
+  config.blue = document.getElementById('bp').value
+  config.port = document.getElementById('serverport').value
+  config.debug = document.getElementById("debug").checked;
+  config.startcolor = document.getElementById('startupcolor').value
+  config.oncolor = document.getElementById('oncolor').value
+  socket.emit('config', config);
+  location.reload(); 
 }
 
 function UpdateCycleMode(CycleMode) {
   UpdateColorCycleListUI(CycleMode.colors);
   $('#CycleState').prop('checked', CycleMode.state);
-  console.log(CycleMode.speed);
   document.getElementById("cyclespeed").value = CycleMode.speed;
   document.getElementById("cycleeffect").value = CycleMode.effect;
 
