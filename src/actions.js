@@ -5,11 +5,15 @@ const logger = require('./logger.js');
 const gpio = require('./gpio.js');
 const logic = require('./logic.js');
 const effect = require('./effects.js');
+const fs = require("fs");
+const configfile = fs.readFileSync("config.json");
+const config = JSON.parse(configfile);
 
 module.exports = {
   connection: function() {
     logger.debug("New client Connected.");
     sioserver('data', data);
+    sioserver('config', config);
     logger.debug("Sent data to new client.");
   },
   change: function(c) {
@@ -38,6 +42,9 @@ module.exports = {
     data.CycleMode.state = !data.CycleMode.state;
     logger.debug("CycleMode state is now " + data.CycleMode.state);
     sioserver('CycleSync', data.CycleMode);
+  },
+  config: function (config) {
+    logic.UserConfig(config)
   }
 
 }

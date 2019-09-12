@@ -8,6 +8,7 @@ const fs = require("fs");
 const configfile = fs.readFileSync("config.json");
 const config = JSON.parse(configfile);
 const tinycolor = require("tinycolor2");
+const writer = require('./writer.js')
 var SaveTimer;
 // CODE
 
@@ -61,6 +62,10 @@ cval: function (c) {
       logger.debug("CycleMode state is now " + data.CycleMode.state);
       sioserver('CycleSync', data.CycleMode);
     }
+  },
+  UserConfig: function (config) {
+    writer.ConfigConstract(config);
+    writer.ConfigApply();
   }
 }
 
