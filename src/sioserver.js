@@ -40,6 +40,8 @@ io.sockets.on('connection', function(socket) {
   socket.on('cycle', action.cycle);
   socket.on('togglestate', action.togglestate);
   socket.on('config', action.config);
+  socket.on('checkforupdates', action.CheakForUpdates);
+  socket.on('update', action.update);
 });
 
 let data = require("./data.js");
@@ -67,12 +69,6 @@ log.debug("[API] - Set Color " + req.params.color);
 action.done(req.params.color);
 res.json(data)
 })
-
-app.get('/api/restart/', function(req, res) {
-  log.debug("[API] - restart ");
-  res.json('Restarting')
-  process.exit();
-  })
 
 action.done(config.RPiLC_settings.startupcolor);
 log.info('Server Ready.');

@@ -66,6 +66,17 @@ cval: function (c) {
   UserConfig: function (config) {
     writer.ConfigConstract(config);
     writer.ConfigApply();
+  },
+  restart: function () {
+    let obj = {
+      type: 'restart',
+      message: 'Restarting Server...',
+      status: 'danger',
+      pos: 'top-center',
+      time: 6000
+    }
+    sioserver('clientevent', obj);
+    process.exit();
   }
 }
 

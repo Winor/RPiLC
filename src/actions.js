@@ -8,6 +8,7 @@ const effect = require('./effects.js');
 const fs = require("fs");
 const configfile = fs.readFileSync("config.json");
 const config = JSON.parse(configfile);
+const updater = require('./updater.js')
 
 module.exports = {
   connection: function() {
@@ -45,6 +46,34 @@ module.exports = {
   },
   config: function (config) {
     logic.UserConfig(config)
+  },
+  CheakForUpdates: async function () {
+    let updateinfo = {
+      update: 'checking'
+    };
+    sioserver('updates', updateinfo);
+    try {
+      updateinfo = await updater.CheckForUpdates()
+      sioserver('updates', updateinfo);
+
+    }catch (err) {
+      updateinfo.update = 'err'
+      sioserver('updates', updateinfo);
+    }
+    
+  },
+  update: async function () {
+    let updateinfo = {
+      update: 'installing'
+    };
+    sioserver('updates', updateinfo);
+    try {
+      await updater.update()
+      logic.restart();
+
+    }catch(err) {
+
+    } 
   }
 
 }
