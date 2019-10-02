@@ -1,5 +1,7 @@
 'use strict'
 const fs = require('fs');
+const packagefile = fs.readFileSync("package.json");
+const packagejson = JSON.parse(packagefile);
 module.exports = {
     ConfigData: {
         gpio_pin: {
@@ -17,7 +19,7 @@ module.exports = {
           on_color: '#ffffff'
         },
         AutoGen: true,
-        Version: '1.3.0'
+        Version: packagejson.version
       },
       write: function (file, data) {
         let json = JSON.stringify(data, null, 2);
