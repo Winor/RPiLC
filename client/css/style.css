@@ -42,6 +42,10 @@
    background-color: #1d1d1d;
  }
 
+ .uk-notification-message {
+  background-color: #1d1d1d !important;
+}
+
  .uactitle {
    padding: 5px;
    border: 5px;

@@ -162,48 +162,87 @@
 	<div id="settings" class="uk-light" uk-modal>
 		<div class="uk-modal-dialog uk-background-secondary">
 			<button class="uk-modal-close-default uk-background-secondary " type="button" uk-close></button>
-			<div class="uk-modal-header uk-background-secondary">
+			<!-- <div class="uk-modal-header uk-background-secondary">
 				<h2 class="uk-modal-title">RPiLC Client Setings</h2>
-			</div>
+			</div> -->
 			<div class="uk-modal-body uk-background-secondary">
 
-				<div>
-					<h6 class="uk-heading-line"><span>Server</span></h6>
-					<label class="uk-margin-small-right">IP</label>
-					<input id="servip" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="__.__.__.__:port">
-					<button onclick="swichserver(document.getElementById('servip').value)" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
-				</div>
-
-				<div class="uk-margin">
-					<h6 class="uk-heading-line"><span>RGB Value</span></h6>
-					<label class="uk-margin-small-right">R</label>
-					<input id="r" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="">
-
-
-					<label class="uk-margin-small-right uk-margin-small-left">G</label>
-					<input id="g" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="">
-
-
-					<label class=" uk-margin-small-left">B</label>
-					<input id="b" class="uk-input uk-form-width-xsmall uk-form-small uk-margin-small-left" type="text" placeholder="">
-					<button onclick="setrgbval()" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
-				</div>
-
-				<div>
-					<h6 class="uk-heading-line"><span>HEX Value</span></h6>
-					<label class="">#</label>
-					<input id="hex" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="#HEX">
-					<button onclick="sethexval()" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
-				</div>
-
-				<div class="uk-margin">
-					<h6 class="uk-heading-line"><span>About</span></h6>
-					<p id="info" class="uk-text-meta">RPiLC Client is not connected to a server</p>
-				</div>
+				<ul class="uk-subnav uk-subnav-pill" uk-switcher>
+					<li><a href="#">genral</a></li>
+					<li><a href="#">updates</a></li>
+					<li><a href="#">about</a></li>
+				</ul>
+				
+				<ul class="uk-switcher uk-margin">
+					<li>
+						<div>
+							<h6 class="uk-heading-line"><span>Server</span></h6>
+							<label class="uk-margin-small-right">IP</label>
+							<input id="servip" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="__.__.__.__:port">
+							<button onclick="swichserver(document.getElementById('servip').value)" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
+						</div>
+						<div class="uk-margin">
+							<button class="uk-button  uk-light uk-button-text" type="button" href="#config" uk-toggle>Go to Server Settings</button>
+						</div>
+		
+						<div class="uk-margin">
+							<h6 class="uk-heading-line"><span>RGB Value</span></h6>
+							<label class="uk-margin-small-right">R</label>
+							<input id="r" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="">
+		
+		
+							<label class="uk-margin-small-right uk-margin-small-left">G</label>
+							<input id="g" class="uk-input uk-form-width-xsmall uk-form-small" type="text" placeholder="">
+		
+		
+							<label class=" uk-margin-small-left">B</label>
+							<input id="b" class="uk-input uk-form-width-xsmall uk-form-small uk-margin-small-left" type="text" placeholder="">
+							<button onclick="setrgbval()" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
+						</div>
+		
+						<div>
+							<h6 class="uk-heading-line"><span>HEX Value</span></h6>
+							<label class="">#</label>
+							<input id="hex" class="uk-input uk-form-width-small uk-form-small" type="text" placeholder="#HEX">
+							<button onclick="sethexval()" class="uk-button uk-button-text"><span uk-icon="chevron-right"></span></button>
+						</div>
+		
+					</li>
+					<li id="updates">
+							<article class="uk-article uk-text-center">
+									<span class="uk-margin" uk-icon="icon: github; ratio: 10"></span>
+									<button onclick="socket.emit('checkforupdates')" class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Cheak for updates</button>
+								</article>
+								<!-- <article class="uk-article uk-text-center">
+										<h1 class="uk-article-title"><a class="uk-link-reset" href="">You are on the latest version</a></h1>
+									<span class="uk-margin" uk-icon="icon: check; ratio: 10"></span>
+									<button onclick="socket.emit('checkforupdates')" class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Cheak for updates</button>
+								</article> -->
+								<!-- <article class="uk-article uk-text-center">
+										<h1 class="uk-article-title"><a class="uk-link-reset" href="">Cheaking for updates...</a></h1>
+										<div class="uk-margin" uk-spinner="ratio: 5"></div>
+								</article> -->
+								<!-- <article class="uk-article uk-text-center">
+										<h1 class="uk-article-title"><a class="uk-link-reset" href="">new update available</a></h1>
+										<span class="uk-label">v1.5.0</span>
+										<p style="white-space: pre-line">## No longer need to manually edit the config file !\r\n* RPiLC now generating the config file\r\n* On first run, settings page will appear letting you configure the app to match your settings\r\n* You can now restart the app using API\r\n```\r\nhttp://RPiLC-Address/restart\r\n```</p>
+									<button class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Install</button>
+								</article> -->
+								<!-- <article class="uk-article uk-text-center">
+										<h1 class="uk-article-title"><a class="uk-link-reset" href="">Installing updates...</a></h1>
+										<div class="uk-margin" uk-spinner="ratio: 5"></div>
+								</article> -->
+					</li>
+					<li>
+							<div class="uk-margin">
+									<h6 class="uk-heading-line"><span>Version</span></h6>
+									<p id="info" class="uk-text-meta">RPiLC Client is not connected to a server</p>
+								</div>
+					</li>
+				</ul>		
 
 			</div>
 			<div class="uk-modal-footer uk-text-right uk-background-secondary">
-				<button class="uk-button uk-button-default" type="button" href="#config" uk-toggle>Config</button>
 				<button class="uk-button uk-button-default uk-modal-close" type="button">close</button>
 			</div>
 

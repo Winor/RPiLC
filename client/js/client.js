@@ -9,7 +9,7 @@ logic();
 }
 
 let clientdata = {
-  Version: "1.2.4",
+  Version: "1.4.0",
   type: 'Client',
 }
 
@@ -33,6 +33,10 @@ let logic = function  () {
 UpdateConfigUI(config);
 });
 
+socket.on('clientevent', function(obj) {
+  clientevents(obj);
+  });
+
  socket.on('updatecolor', function(c) {
    ServerData.ColorVals = c;
    joe.setnu(c.CurrentHEX);
@@ -48,6 +52,11 @@ UpdateConfigUI(config);
    ServerData.SavedColors = SavedColors;
    upcolors(SavedColors)
  });
+
+ socket.on('updates', function(updateinfo) {
+  UpdateUpdatesUI(updateinfo)
+ 
+});
 
 }
 
@@ -129,7 +138,6 @@ function config() {
   config.startcolor = document.getElementById('startupcolor').value
   config.oncolor = document.getElementById('oncolor').value
   socket.emit('config', config);
-  location.reload(); 
 }
 
 function UpdateCycleMode(CycleMode) {
@@ -157,6 +165,55 @@ function UpdateColorValsInput(c) {
   document.getElementById('b').value = c.CurrentRGB.b;
   document.getElementById('hex').value = c.CurrentHEX;
 }
+
+function notification(message,status,pos,time) {
+  UIkit.notification({
+    message: message,
+    status: status,
+    pos: pos,
+    timeout: time
+});
+}
+
+function clientevents(obj) {
+  switch (obj.type) {
+    case 'notification':
+      notification(obj.message, obj.status, obj.pos, obj.time)
+      break;
+
+      case 'restart':
+        notification(obj.message, obj.status, obj.pos, obj.time)
+        setTimeout(() => location.reload(), obj.time);
+        break;
+  
+    default:
+      break;
+  }
+}
+
+function UpdateUpdatesUI(updateinfo) {
+  switch (updateinfo.update) {
+    case 'checking':
+      document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">Cheaking for updates...<\/a><\/h1>\r\n<div class=\"uk-margin\" uk-spinner=\"ratio: 5\"><\/div>\r\n<\/article>"
+      break;
+    case false:
+      document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">You are on the latest version<\/a><\/h1>\r\n<span class=\"uk-margin\" uk-icon=\"icon: check; ratio: 10\"><\/span>\r\n<button onclick=\"socket.emit(\'checkforupdates\')\" class=\"uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom\">Cheak for updates<\/button>\r\n<\/article>"
+      break;
+
+      case true:
+          document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">new update available<\/a><\/h1>\r\n<span class=\"uk-label\">"+ updateinfo.version + "<\/span>\r\n<p style=\"white-space: pre-line\">" + updateinfo.updateinfo +"<\/p>\r\n<button onclick=\"socket.emit(\'update\')\" class=\"uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom\">Install<\/button>\r\n<\/article>"
+
+        break;
+
+        case 'installing':
+           document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">Installing updates...<\/a><\/h1>\r\n<div class=\"uk-margin\" uk-spinner=\"ratio: 5\"><\/div>\r\n<\/article>"
+            break;
+  
+    default:
+      break;
+  }
+}
+
 
 
 console.log('ready');
