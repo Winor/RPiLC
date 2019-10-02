@@ -1,8 +1,11 @@
 'use strict'
+const fs = require("fs");
+const packagefile = fs.readFileSync("package.json");
+const packagejson = JSON.parse(packagefile);
 module.exports = {
-  Version: "1.3.0",
-  type: 'desktop',
-  description: "My Workstation",
+  Version: packagejson.version,
+  type: 'LED Strip',
+  description: "My LED Strip",
   state: "off",
   SavedColors: [],
   ColorVals: {
@@ -19,9 +22,5 @@ module.exports = {
     colors: ['#be0000', '#beb500', '#21be00', '#0051be'],
     speed: 8000,
     effect: "fade"
-  },
-  RainbowMode: {
-    state: false, // true / false
-    speed: 6000
   }
 }
