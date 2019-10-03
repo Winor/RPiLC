@@ -40,7 +40,5 @@ module.exports = {
     },
     ConfigApply: function () {
       this.ConfigWrite();
-      console.log("app is restarting to apply changes...");
-      process.exit();
     }
 }

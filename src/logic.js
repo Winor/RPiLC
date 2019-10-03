@@ -66,6 +66,7 @@ cval: function (c) {
   UserConfig: function (config) {
     writer.ConfigConstract(config);
     writer.ConfigApply();
+    this.restart();
   },
   restart: function () {
     let obj = {
@@ -76,6 +77,7 @@ cval: function (c) {
       time: 6000
     }
     sioserver('clientevent', obj);
+    logger.info("Restarting Server...");
     process.exit();
   }
 }
