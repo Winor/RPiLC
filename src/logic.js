@@ -48,21 +48,6 @@ cval: function (c) {
     clearTimeout(SaveTimer);
     SaveTimer =  setTimeout(() => SaveColor(data.ColorVals.CurrentHEX), 7000);
   },
-
-   chgstate: function() {
-    if (data.state == "on") {
-      this.setcolor("black");
-    } else {
-      this.setcolor(config.RPiLC_settings.on_color);
-    }
-  },
-  turnoffcycle: function () {
-    if (data.CycleMode.state) {
-      data.CycleMode.state = false;
-      logger.debug("CycleMode state is now " + data.CycleMode.state);
-      sioserver('CycleSync', data.CycleMode);
-    }
-  },
   UserConfig: function (config) {
     writer.ConfigConstract(config);
     writer.ConfigApply();

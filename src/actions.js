@@ -18,11 +18,11 @@ module.exports = {
     logger.debug("Sent data to new client.");
   },
   change: function(c) {
-    logic.turnoffcycle();
+    module.exports.togglecycle('off');
     gpio(c.r, c.g, c.b);
   },
   done: function(val) {
-    logic.turnoffcycle();
+    module.exports.togglecycle('off');
     logic.setcolor(val);
   },
   cycle: function(cycle) {
@@ -31,18 +31,43 @@ module.exports = {
     sioserver('CycleSync', data.CycleMode);
     effect.CycleModeSwitch(cycle.effect);
   },
-  togglestate: function() {
-    if (data.CycleMode.state) {
-      data.CycleMode.state = false;
-      logger.debug("CycleMode state is now " + data.CycleMode.state);
-      sioserver('CycleSync', data.CycleMode);
+  togglestate: function(state) {
+    switch (state) {
+      case 'on':
+        if (data.state !== 'on') {
+          chgstate()
+        }
+        break;
+
+      case 'off':
+        if (data.state != 'off') {
+          chgstate()
+        }
+        break;
+    
+      default:
+          chgstate()
+        break;
     }
-    logic.chgstate();
+    
   },
-  togglecycle: function () {
-    data.CycleMode.state = !data.CycleMode.state;
-    logger.debug("CycleMode state is now " + data.CycleMode.state);
-    sioserver('CycleSync', data.CycleMode);
+  togglecycle: function (state) {
+    switch (state) {
+      case 'on':
+        if (!data.CycleMode.state) {
+          chcycle()
+        }
+        break;
+      case 'off':
+          if (data.CycleMode.state) {
+            chcycle()
+          }
+        break;
+    
+      default:
+          chcycle()
+        break;
+    }
   },
   config: function (config) {
     logic.UserConfig(config)
@@ -77,3 +102,22 @@ module.exports = {
   }
 
 }
+
+
+function chgstate() {
+  if (data.state == "on") {
+    if (data.CycleMode.state) {
+      module.exports.togglecycle('off')
+    }
+    logic.setcolor("black");
+  } else {
+    logic.setcolor(config.RPiLC_settings.on_color);
+  }
+} 
+
+function chcycle() {
+  data.CycleMode.state = !data.CycleMode.state;
+  logger.debug("CycleMode state is now " + data.CycleMode.state);
+  sioserver('CycleSync', data.CycleMode);
+  effect.CycleModeSwitch(data.CycleMode.effect);
+} 
