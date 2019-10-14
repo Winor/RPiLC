@@ -58,7 +58,19 @@ app.get('/api/togglestate', function(req, res) {
   res.json(data)
 })
 
-app.get('/api/togglecycle', function(req, res) {
+app.get('/api/togglestate/:state/', function(req, res) {
+  log.debug("[API] - Toggle state");
+  action.togglestate(req.params.state);
+  res.json(data)
+})
+
+app.get('/api/togglecycle/:state/', function(req, res) {
+  log.debug("[API] - Toggle cycle "+ req.params.state);
+  action.togglecycle(req.params.state);
+  res.json(data)
+})
+
+app.get('/api/togglecycle/', function(req, res) {
   log.debug("[API] - Toggle cycle");
   action.togglecycle();
   res.json(data)
