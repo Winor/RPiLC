@@ -15,11 +15,11 @@ RPiLC allows you to control your RGB led strip from any device using a Raspberry
 | 📲 **Touch friendly**     | The app was designed to be comfortable to use on any device |
 | 🕒 **Recent Colors**      | Choose a color from a list of recently used colors          |
 | ▶ **Cycle Colors**       | Select colors to cycle, choose transition effect            |
-| 📱 **iOS web app**        | Add RPiLC to your home screen and use like a normal app     |
+| 📱 **iOS web app**        | Add RPiLC to your home screen and use it like a normal app   |
 | 🌐 **Web Client**         | Use RPiLC from any browser                                  |
 | 🔃 **Flexible**           | Connect to other RPiLC Servers through one web client       |
 | 🔄 **Updater**            | Get updates for RPiLC through the web client (Experimental) |
-| ↔ **API**                | Interact with RPiLC via API                                   |
+| ↔ **API**                | Interact with RPiLC via the API                                |
 
 
 ## Prerequisites
@@ -72,27 +72,20 @@ sudo pm2 startup
 ```
 
 ## API
-### Status
-```
-http://RPiLC-Address/api/status
-```
-Will return status in JSON format
-### Toggle State
-```
-http://RPiLC-Address/api/togglestate
-```
-Will turn the LED strip on or off & return status in JSON format
-### Toggle Cycle
-```
-http://RPiLC-Address/api/togglecycle
-```
-Will turn the LED strip on or off & return status in JSON format
-### Set Color
-```
-http://RPiLC-Address/api/set/[color]
-```
-Accepts hex value, rgb(x, x, x) and color name.
-Will set the LED strip color & return status in JSON format
+Use HTTP get requests to interact with your LED strip, for example ``http://127.0.0.1/api/set/blue`` will set the LED strip color to blue.
+Every request will return data in JSON format.
+
+| Location             | Description                                                                            |
+|----------------------|----------------------------------------------------------------------------------------|
+| /api/status          | Return status in JSON format                                                           |
+| /api/togglestate     | Turn the LED strip on or off                                                           |
+| /api/togglestate/on  | Turn the LED strip on                                                                  |
+| /api/togglestate/off | Turn the LED strip off                                                                 |
+| /api/togglecycle     | Turn cycle mode on or off                                                              |
+| /api/togglecycle/on  | Turn cycle mode on                                                                     |
+| /api/togglecycle/off | Turn cycle mode off                                                                    |
+| /api/set/``color``   | Set the LED strip to a specific color, accepts hex value, rgb(x, x, x) and color name  |
+
 ## Apple Shortcuts
 You can use this [Siri shortcut](https://www.icloud.com/shortcuts/4746aadabf974abbae066326c69e8c3a) to toggle your LED strip using your Apple device.
 
