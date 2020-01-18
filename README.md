@@ -4,7 +4,8 @@
 ![GitHub (pre-)release](https://img.shields.io/github/release/Winor/RPiLC/all.svg)
 [![Dependency Status](https://david-dm.org/Winor/RPiLC.svg)](https://david-dm.org/Winor/RPiLC)
 
-RPiLC allows you to control your RGB led strip from any device using a Raspberry Pi.
+**RPiLC 2 is still in early development.**
+**2.0 will support multiple RGB outputs and remote ESP/Pi RGB outputs.**
 
 ![Imgur](https://i.imgur.com/00O4qHE.png)
 
