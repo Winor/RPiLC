@@ -1,1 +1,1 @@
-require('./src/devices.js');
+require('./src/server.js')

@@ -1,26 +1,34 @@
-'use strict'
-const fs = require("fs");
-const packagefile = fs.readFileSync("package.json");
-const packagejson = JSON.parse(packagefile);
-module.exports = {
-  Version: packagejson.version,
-  type: 'LED Strip',
-  description: "My LED Strip",
-  state: "off",
-  SavedColors: [],
-  ColorVals: {
-    CurrentHEX: '#000000',
-    CurrentRGB: {
-      r: 0,
-      g: 0,
-      b: 0
-    },
-    CurrentCName: 'black'
-  },
-  CycleMode: {
-    state: false, // true / false
-    colors: ['#be0000', '#beb500', '#21be00', '#0051be'],
-    speed: 8000,
-    effect: "fade"
+// 'use strict'
+// const fs = require("fs");
+// const packagefile = fs.readFileSync("package.json");
+// const packagejson = JSON.parse(packagefile);
+
+
+//module.exports = 
+
+function data(device) {
+  this.mac = device.mac,
+  this.interface = device.interface,
+  this.id = device.mac + '.' + device.interface
+  this.msg = function (action,data) {
+    return {
+    action: action,
+    id: this.id,
+    data: data
+    }
   }
 }
+
+let devices = {
+  dev1: new data ({mac: "111111",
+  interface: "1"
+})
+
+}
+
+class data {
+  constructor(device, cmd, data){
+  }
+}
+
+console.log(devices.dev1.msg("color",{rgb:"1.1.1"}))

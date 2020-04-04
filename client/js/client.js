@@ -1,220 +1,206 @@
-let val = document.getElementById('rgbValue');
-let joe = colorjoe.rgb('rgbPicker', "black")
-let socket = io.connect();
+const val = document.getElementById('rgbValue')
+const joe = colorjoe.rgb('rgbPicker', 'black')
+const socket = io.connect()
 
-
-function swichserver(ip) {
-socket = io.connect("http://"+ip, {"force new connection": true});
-logic();
+const clientdata = {
+  Version: '2.0',
+  type: 'Client'
 }
 
-let clientdata = {
-  Version: "1.4.0",
-  type: 'Client',
-}
+let ServerData
 
-let ServerData;
-
-let logic = function  () {
-
-  socket.on('data', function(data) {
-    ServerData = data;
-    document.getElementById('info').innerHTML = "RPiLC client v" + clientdata.Version + " connected to " + document.getElementById('servip').value + " running server v" + data.Version;
-    document.getElementById('servip').value = socket.io.engine.hostname;
-    UpdateColorValsInput(data.ColorVals);
-   joe.setnu(data.ColorVals.CurrentHEX);
-   upcolors(data.SavedColors)
-   UpdateColorBar(data);
-   UpdateCycleMode(data.CycleMode);
-
- });
-
- socket.on('config', function(config) {
-UpdateConfigUI(config);
-});
-
-socket.on('clientevent', function(obj) {
-  clientevents(obj);
-  });
-
- socket.on('updatecolor', function(c) {
-   ServerData.ColorVals = c;
-   joe.setnu(c.CurrentHEX);
-   UpdateColorBar(ServerData);
-   UpdateColorValsInput(c);
- });
-
- socket.on('CycleSync', function(CycleMode) {
-   UpdateCycleMode(CycleMode);
- });
-
- socket.on('SaveColor', function(SavedColors) {
-   ServerData.SavedColors = SavedColors;
-   upcolors(SavedColors)
- });
-
- socket.on('updates', function(updateinfo) {
-  UpdateUpdatesUI(updateinfo)
- 
-});
-
-}
-
-joe.on('change', function(c) {
-  let data ={
-  ColorVals: {
-  CurrentRGB: {
-    r:Math.round(255 * c.red()),
-    g: Math.round(255 * c.green()),
-    b: Math.round(255 * c.blue())
-  },
-  CurrentHEX: c.hex().replace(/#/g, '')
-}
-}
-
-  UpdateColorBar(data);
-  socket.emit('change', data.ColorVals.CurrentRGB);
+socket.on('devicelist', function (list) {
+  updatedevicelist(list)
+  askdata()
+})
+socket.on('data', function (data) {
+  const selecteddevice = $('input[name=devices]:checked').attr('id')
+  if (data.id === selecteddevice) {
+    console.log(data)
+    ServerData = data
+    UpdateColorValsInput(data.color)
+    joe.setnu(data.color.hex)
+    upcolors(data.savedcolors)
+    UpdateColorBar(data)
+    UpdateCycleMode(data.cycle)
+  }
 })
 
-joe.on('done', function(c) {
-  emitcolor(c.hex());
-});
+socket.on('config', function (config) {
+  UpdateConfigUI(config)
+})
 
-function emitcolor(color) {
-  socket.emit('done', color);
+socket.on('clientevent', function (obj) {
+  clientevents(obj)
+})
+
+socket.on('updatecolor', function (c) {
+  ServerData.color = c.color
+  const selecteddevice = $('input[name=devices]:checked').attr('id')
+  if (c.id === selecteddevice) {
+    joe.setnu(c.color.hex)
+    UpdateColorBar(c)
+    UpdateColorValsInput(c.color)
+  }
+})
+
+socket.on('cycle', function (data) {
+  console.log(data)
+  const selecteddevice = $('input[name=devices]:checked').attr('id')
+  if (data.id === selecteddevice) {
+    UpdateCycleMode(data.cycle)
+  }
+})
+
+socket.on('SaveColor', function (SavedColors) {
+  ServerData.SavedColors = SavedColors
+  upcolors(SavedColors)
+})
+
+socket.on('updates', function (updateinfo) {
+  UpdateUpdatesUI(updateinfo)
+})
+
+joe.on('change', function (c) {
+  const device = $('input[name=devices]:checked').attr('id')
+  const data = {
+    color: {
+      rgb: {
+        r: Math.round(255 * c.red()),
+        g: Math.round(255 * c.green()),
+        b: Math.round(255 * c.blue())
+      },
+      hex: c.hex().replace(/#/g, '')
+    }
+  }
+
+  UpdateColorBar(data)
+  socket.emit('previewcolor', device, data.color.rgb)
+})
+
+joe.on('done', function (c) {
+  emitcolor(c.hex())
+})
+
+function emitcolor (color) {
+  const device = $('input[name=devices]:checked').attr('id')
+  socket.emit('setcolor', device, color)
 }
 
-
-
-function setrgbval() {
+function setrgbval () {
   emitcolor({
     r: document.getElementById('r').value,
     g: document.getElementById('g').value,
     b: document.getElementById('b').value
-  });
+  })
 }
 
-function sethexval() {
-  emitcolor(document.getElementById('hex').value);
+function sethexval () {
+  emitcolor(document.getElementById('hex').value)
 }
 
-function togglestate() {
-  socket.emit('togglestate');
+function togglestate () {
+  const device = $('input[name=devices]:checked').attr('id')
+  socket.emit('togglestate', device)
 };
 
-function fade() {
-  let CycleMode = {
-    state: document.getElementById("CycleState").checked, // true / false
+function fade () {
+  const device = $('input[name=devices]:checked').attr('id')
+  const cycle = {
+    ison: document.getElementById('CycleState').checked, // true / false
     colors: Object.values(cylclr),
-    speed: document.getElementById("cyclespeed").value,
-    effect: document.getElementById("cycleeffect").value
+    speed: document.getElementById('cyclespeed').value,
+    effect: document.getElementById('cycleeffect').value
   }
-  socket.emit('cycle', CycleMode);
+  socket.emit('cycle', device, { ison: cycle.ison, colors: cycle.colors, effect: cycle.effect, speed: cycle.speed })
 };
 
-function UpdateConfigUI(config) {
+function UpdateConfigUI (config) {
   if (config.AutoGen) {
-    UIkit.modal("#config").show();
-    document.getElementById('welcome').innerHTML= "Welcome to RPiLC - Install";
-    document.getElementById('close0').style.visibility = "hidden";
-    document.getElementById('close1').style.visibility = "hidden"; 
+    UIkit.modal('#config').show()
+    document.getElementById('welcome').innerHTML = 'Welcome to RPiLC - Install'
+    document.getElementById('close0').style.visibility = 'hidden'
+    document.getElementById('close1').style.visibility = 'hidden'
   }
-  document.getElementById('rp').value = config.gpio_pin.red;
-  document.getElementById('gp').value = config.gpio_pin.green;
-  document.getElementById('bp').value = config.gpio_pin.blue;
-  document.getElementById('serverport').value = config.server_settings.webserverport;
-  $('#debug').prop('checked', config.server_settings.debug);
-  document.getElementById('startupcolor').value = config.RPiLC_settings.startupcolor;
-  document.getElementById('oncolor').value = config.RPiLC_settings.on_color;
+  document.getElementById('rp').value = config.gpio_pin.red
+  document.getElementById('gp').value = config.gpio_pin.green
+  document.getElementById('bp').value = config.gpio_pin.blue
+  document.getElementById('serverport').value = config.server_settings.webserverport
+  $('#debug').prop('checked', config.server_settings.debug)
+  document.getElementById('startupcolor').value = config.RPiLC_settings.startupcolor
+  document.getElementById('oncolor').value = config.RPiLC_settings.on_color
 }
 
-function config() {
-  let config = {}
+function config () {
+  const config = {}
   config.red = document.getElementById('rp').value
   config.green = document.getElementById('gp').value
   config.blue = document.getElementById('bp').value
   config.port = document.getElementById('serverport').value
-  config.debug = document.getElementById("debug").checked;
+  config.debug = document.getElementById('debug').checked
   config.startcolor = document.getElementById('startupcolor').value
   config.oncolor = document.getElementById('oncolor').value
-  socket.emit('config', config);
+  socket.emit('config', config)
 }
 
-function UpdateCycleMode(CycleMode) {
-  UpdateColorCycleListUI(CycleMode.colors);
-  $('#CycleState').prop('checked', CycleMode.state);
-  document.getElementById("cyclespeed").value = CycleMode.speed;
-  document.getElementById("cycleeffect").value = CycleMode.effect;
-
+function UpdateCycleMode (cycle) {
+  UpdateColorCycleListUI(cycle.colors)
+  $('#CycleState').prop('checked', cycle.ison)
+  document.getElementById('cyclespeed').value = cycle.speed
+  document.getElementById('cycleeffect').value = cycle.effect
 }
 
-function UpdateColorBar(data){
- document.getElementById('colorbar').style.background = "#"+data.ColorVals.CurrentHEX;
+function UpdateColorBar (data) {
+  document.getElementById('colorbar').style.background = '#' + data.color.hex
+  // $('html').css("background-color" , '#' + data.color.hex);
   // document.getElementById('logo').style.stroke = "#"+data.ColorVals.CurrentHEX;
-  document.getElementById('R').style.fill = "rgb(" + data.ColorVals.CurrentRGB.r+", 0, 0)";
-  document.getElementById('R').style.stroke = "rgb(" + data.ColorVals.CurrentRGB.r+", 0, 0)";
-  document.getElementById('G').style.fill = "rgb(0,"+ data.ColorVals.CurrentRGB.g+ ",0)";
-  document.getElementById('G').style.stroke = "rgb(0,"+ data.ColorVals.CurrentRGB.g+ ",0)";
-  document.getElementById('B').style.fill = "rgb(0,0," + data.ColorVals.CurrentRGB.b+ ")";
-  document.getElementById('B').style.stroke = "rgb(0,0," + data.ColorVals.CurrentRGB.b+ ")";
+  document.getElementById('R').style.fill = 'rgb(' + data.color.rgb.r + ', 0, 0)'
+  document.getElementById('R').style.stroke = 'rgb(' + data.color.rgb.r + ', 0, 0)'
+  document.getElementById('G').style.fill = 'rgb(0,' + data.color.rgb.g + ',0)'
+  document.getElementById('G').style.stroke = 'rgb(0,' + data.color.rgb.g + ',0)'
+  document.getElementById('B').style.fill = 'rgb(0,0,' + data.color.rgb.b + ')'
+  document.getElementById('B').style.stroke = 'rgb(0,0,' + data.color.rgb.b + ')'
 }
 
-function UpdateColorValsInput(c) {
-  document.getElementById('r').value = c.CurrentRGB.r;
-  document.getElementById('g').value = c.CurrentRGB.g;
-  document.getElementById('b').value = c.CurrentRGB.b;
-  document.getElementById('hex').value = c.CurrentHEX;
+function UpdateColorValsInput (c) {
+  document.getElementById('r').value = c.rgb.r
+  document.getElementById('g').value = c.rgb.g
+  document.getElementById('b').value = c.rgb.b
+  document.getElementById('hex').value = c.hex
 }
 
-function notification(message,status,pos,time) {
+function notification (message, status, pos, time) {
   UIkit.notification({
     message: message,
     status: status,
     pos: pos,
     timeout: time
-});
+  })
 }
 
-function clientevents(obj) {
+function clientevents (obj) {
   switch (obj.type) {
     case 'notification':
       notification(obj.message, obj.status, obj.pos, obj.time)
-      break;
+      break
 
-      case 'restart':
-        notification(obj.message, obj.status, obj.pos, obj.time)
-        setTimeout(() => location.reload(), obj.time);
-        break;
-  
+    case 'restart':
+      notification(obj.message, obj.status, obj.pos, obj.time)
+      setTimeout(() => location.reload(), obj.time)
+      break
+
     default:
-      break;
+      break
   }
 }
 
-function UpdateUpdatesUI(updateinfo) {
-  switch (updateinfo.update) {
-    case 'checking':
-      document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">Cheaking for updates...<\/a><\/h1>\r\n<div class=\"uk-margin\" uk-spinner=\"ratio: 5\"><\/div>\r\n<\/article>"
-      break;
-    case false:
-      document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">You are on the latest version<\/a><\/h1>\r\n<span class=\"uk-margin\" uk-icon=\"icon: check; ratio: 10\"><\/span>\r\n<button onclick=\"socket.emit(\'checkforupdates\')\" class=\"uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom\">Cheak for updates<\/button>\r\n<\/article>"
-      break;
-
-      case true:
-          document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">new update available<\/a><\/h1>\r\n<span class=\"uk-label\">"+ updateinfo.version + "<\/span>\r\n<p style=\"white-space: pre-line\">" + updateinfo.updateinfo +"<\/p>\r\n<button onclick=\"socket.emit(\'update\')\" class=\"uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom\">Install<\/button>\r\n<\/article>"
-
-        break;
-
-        case 'installing':
-           document.getElementById('updates').innerHTML = "<article class=\"uk-article uk-text-center\">\r\n<h1 class=\"uk-article-title\"><a class=\"uk-link-reset\" href=\"\">Installing updates...<\/a><\/h1>\r\n<div class=\"uk-margin\" uk-spinner=\"ratio: 5\"><\/div>\r\n<\/article>"
-            break;
-  
-    default:
-      break;
-  }
+function askdata () {
+  const device = $('input[name=devices]:checked').attr('id')
+  document.getElementById('logotext').innerHTML = device
+  socket.emit('askdata', device)
 }
 
-
-
-console.log('ready');
-logic();
+// $(document).ready(function () {
+//   console.log('ready')
+  
+// })

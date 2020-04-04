@@ -1,6 +1,6 @@
 {
   "name": "rpilc",
-  "version": "2.0.0",
+  "version": "2.0.20",
   "author": "Winor",
   "keywords": [
     "led strip controler",
@@ -27,8 +27,16 @@
     "pigpio": "~2.0.0",
     "request": "^2.88.0",
     "semver": "^6.3.0",
-    "socket.io": "~2.3.0",
+    "socket.io": "^2.3.0",
     "tinycolor2": "^1.4.1",
     "tinygradient": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }

@@ -22,7 +22,6 @@ class Light {
     this.type = type
     this.id = id
     this.haredware = haredware
-    this.io = io
     this.cycle = {
       ison: false,
       colors: ['#be0000', '#beb500', '#21be00', '#0051be'],
@@ -30,9 +29,9 @@ class Light {
       effect: 'fade'
     }
     this.brightness = 100
+    this.color = color
     this.oncolor = oncolor
     this.savedcolors = []
-    this.color = color
   }
 
   get color () {
@@ -51,8 +50,6 @@ class Light {
     this.getstatus()
     const brig = this.getbrightness(color.rgb.r, color.rgb.g, color.rgb.b)
     this.setcolor(brig[0], brig[1], brig[2])
-    clearTimeout(this.savetimer)
-    this.savecolor('#' + color.hex)
   }
 
   getbrightness (r, g, b) {
@@ -75,7 +72,7 @@ class Light {
     return this.status
   }
 
-  setcycle ({ ison, colors, effect, speed }) {
+  setcycle (ison, colors, effect) {
     this.cycle.ison = ison
     this.getstatus()
 
@@ -85,10 +82,6 @@ class Light {
 
     if (effect !== undefined) {
       this.cycle.effect = effect
-    }
-
-    if (speed !== undefined) {
-      this.cycle.speed = speed
     }
 
     this.cycleswitch(this.cycle.effect)
@@ -122,7 +115,7 @@ class Light {
   }
 
   // get color gradient array
-  getgradient (colors) {
+  getGradient (colors) {
     const gradient = tinygradient(colors)
     const steps = gradient.rgb(110)
     const Grad = []
@@ -142,9 +135,40 @@ class Light {
 
     for (var i = 0; i < clist.length - 1; i++) {
       logger.debug(clist[i], clist[i + 1])
-      fadeList[i] = this.getgradient([clist[i], clist[i + 1]])
+      fadeList[i] = this.getGradient([clist[i], clist[i + 1]])
     }
     return fadeList
+  }
+
+  fadeTimer (colors) {
+    let i = 1
+    const steps = this.getfade(colors)
+    this.playFade(steps[0])
+    this.cycle.timer = setInterval(() => {
+      if (this.cycle.ison === false) {
+        clearInterval(this.cycle.timer)
+        return
+      }
+
+      this.playFade(steps[i])
+
+      i++
+
+      if (i === Object.keys(steps).length) {
+        logger.debug('finished a circle!!')
+        i = 1
+      }
+    }, this.cycle.speed)
+  }
+
+  playFade (colors) {
+    for (let i = 0; i < colors.length; i++) {
+      (i => {
+        setTimeout(() => {
+          this.color = colors[i]
+        }, 10 * i)
+      })(i)
+    }
   }
 
   setcolor (r, g, b) {
@@ -152,15 +176,12 @@ class Light {
   }
 
   savecolor (color) {
-    if ((this.status === 'off') || (this.status === 'cycle')) {
+    if (this.status === 'on') {
       return
     }
-    this.savetimer = setTimeout(() => {
-      const save = this.savedcolors.filter(c => c !== color)
-      save.unshift(color)
-      save.splice(19, 1)
-      this.savedcolors = save
-    }, 6000)
+    this.savedcolors = this.savedcolors.filter(c => c !== color)
+    this.savedcolors.unshift(color)
+    this.savedcolors.splice(19, 1)
   }
 
   toggle (state) {
@@ -173,10 +194,6 @@ class Light {
         break
 
       case 'off':
-        if (this.status === 'cycle') {
-          this.setcycle({ ison: false })
-          this.color = 'black'
-        }
         this.color = 'black'
         break
 
@@ -187,7 +204,7 @@ class Light {
         }
 
         if (this.status === 'cycle') {
-          this.setcycle({ ison: false })
+          this.setcycle(false)
         }
         this.color = 'black'
 
@@ -196,4 +213,16 @@ class Light {
   }
 }
 
+//  devices["local-1"].setcycle(true)
+//  devices["local-0"].brightness = 20
+//   devices["local-0"].setcycle(true,["green","yellow","blue","purple"])
+
+// console.log(devices)
+// devices["local-0"].color = "white"
+//  devices["local-1"].color = "red"
+
+//  devices["local-0"].io.set(0,255,0)
+//  devices["local-1"].setcolor(0,255,0)
+// for (let i = 0; i < 255; i++) {
+//   devices["local-0"].color = "rgb 255 0 "+ i
 module.exports = Light

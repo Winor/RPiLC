@@ -23,7 +23,7 @@ cval: function (c) {
     }
   } else {
     logger.warn("invalid color.");
-    return "error";
+    return "invalid color.";
   }
 },
 

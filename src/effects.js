@@ -6,9 +6,9 @@ const tinycolor = require("tinycolor2");
 const tinygradient = require("tinygradient");
 var stimer;
 
-module.exports = {
+
   // CycleMode switch
-  CycleModeSwitch: function(mode) {
+  module.exports.CycleModeSwitch = function(mode) {
     switch (mode) {
       case "fade":
         clearInterval(stimer)
@@ -23,10 +23,8 @@ module.exports = {
         smooth(data.CycleMode.colors);
         break;
       default:
-        //StepCounter(mode);
     }
   }
-}
 
 //add CurrentHEX to the begining of color list and last color to the end of the list
 function afctel(colors) {
