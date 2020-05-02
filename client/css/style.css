@@ -1,3 +1,12 @@
+:root {
+  --bg-color: #1d1d1d;
+  --sec-bg-color: #282828;
+  --btn-color: #272727;
+  --btn-hover-color: #353535;
+  --btn-checked-color: #424242;
+
+}
+
  @media (max-width: 600px) {
    /* .logo {
      height: 5px;
@@ -23,6 +32,18 @@
    .colorPicker .oned, .colorPicker .oned .bg, .colorPicker .oned .pointer .shape {
      width: 45px !important;
    }
+ }
+
+ .colorPicker {
+  background-color: var(--sec-bg-color)  !important;
+ }
+
+ .secbgcolor {
+  background-color: var(--sec-bg-color)  !important;
+ }
+
+ .bgcolor {
+  background-color: var(--bg-color)  !important;
  }
 
  .pickrr {
@@ -51,7 +72,7 @@
   }
   .seting {
     color: #fdfdfd;
-    background-color: #282828;
+    background-color: var(--sec-bg-color);
     overflow: hidden;
     display: -moz-inline-stack;
     display: inline-block;
@@ -68,13 +89,13 @@
   }
 
   .titlebar {
-    background-color: #282828;
+    background-color: var(--sec-bg-color);
   }
 
   .device {
     margin: 0px !important;
     margin-top: 5px !important;
-    background-color: #282828;
+    background-color: var(--sec-bg-color);
   }
 
   .ttl {
@@ -86,7 +107,7 @@
     float: none;
   }
    .baklogo {
-     background-color: #282828;
+     background-color: var(--sec-bg-color);
      overflow: hidden;
      margin-left: 10px;
      padding: 5px;
@@ -98,13 +119,16 @@
     background-color: #2e2e2e;
   }
 
-
+  .noSelect {
+    outline: none;
+    -moz-outline-style: none;
+}
 
  html {
-   background-color: #1d1d1d;
+   background-color: var(--bg-color); 
  }
  .uk-notification-message {
-  background-color: #1d1d1d !important;
+  background-color: var(--bg-color) !important;
 }
 
  .uactitle {
@@ -117,7 +141,7 @@
  .actionbtn {
   height: 55px;
   width: 55px;
-  background: #272727;
+  background: var(--btn-color);
   display: inline-block;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -127,7 +151,7 @@
  }
 
  .actionbtn:hover {
-background: #353535;
+background: var(--btn-hover-color);
  }
 
  input[name=selectui] {
@@ -196,27 +220,32 @@ background: #353535;
 }
 
  input[name=devices]+label {
-  background: #272727;
+  background: var(--sec-bg-color);
   margin-left: 5%;
   width: 100px;
   height: 40px;
+  overflow: hidden;
+  overflow: -moz-hidden-unscrollable;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   text-align: center;
   display: inline-block;
   padding-top: 10px;
 }
 
 input[name=devices]:checked+label {
-  background: #424242;
+  background: var(--bg-color);
   margin-left: 5%;
   width: 100px;
   height: 40px;
   text-align: center;
   display: inline-block;
+  font-weight: bold;
   padding-top: 10px;
 }
 
 input[name=devices]:hover+label {
-  background: #4e4e4e;
+  background: var(--btn-hover-color);
   margin-left: 5%;
   width: 100px;
   height: 40px;

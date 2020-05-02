@@ -17,7 +17,7 @@ server.listen(config.server_settings.webserverport)
 app.use(express.static(config.server_settings.webdir))
 
 io.sockets.on('connection', function (socket) {
-  io.sockets.emit('devicelist', interact.listdevices())
+  io.sockets.emit('devicelist', interact.listdevicesnames())
   socket.on('askdata', function (device) {
     io.sockets.emit('data', interact.getdata(device))
   })
@@ -34,4 +34,24 @@ io.sockets.on('connection', function (socket) {
   socket.on('cycle', function (device, { ison, colors, effect, speed }) {
     io.sockets.emit('cycle', interact.setcycle(device, { ison, colors, effect, speed }))
   })
+  socket.on('setoldcolor', function (device) {
+    io.sockets.emit('updatecolor', interact.setoldcolor(device))
+  })
+  socket.on('setoncolor', function (device) {
+    io.sockets.emit('updatecolor', interact.setoncolor(device))
+  })
+  socket.on('fadeone', function (device, color) {
+    io.sockets.emit('updatecolor', interact.fadeone(device, color))
+  })
+  socket.on('devicesetings', function (device, { name, oncolor }) {
+    io.sockets.emit('devicesetings', interact.devicesetings(device, { name, oncolor }))
+  })
+})
+
+// server events
+interact.events.on('updatecolor', function (device) {
+  io.sockets.emit('updatecolor', interact.getdata(device))
+})
+interact.events.on('updatesaved', function (device) {
+  io.sockets.emit('updatesaved', interact.getdata(device))
 })

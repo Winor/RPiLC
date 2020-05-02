@@ -2,6 +2,9 @@
 const tinycolor = require('tinycolor2')
 const tinygradient = require('tinygradient')
 const logger = require('./logger.js')
+const EventEmitter = require('events')
+class ServerEvents extends EventEmitter {}
+const serverevents = new ServerEvents()
 
 // gets color object
 function getcolor (c) {
@@ -40,19 +43,34 @@ class Light {
   }
 
   set color (c) {
-    if (this._color !== null && this.status !== 'cycle') {
-      this.old_color = this._color
-    }
     const color = getcolor(c)
     if (color == null) {
       return
     }
     this._color = color
     this.getstatus()
-    const brig = this.getbrightness(color.rgb.r, color.rgb.g, color.rgb.b)
-    this.setcolor(brig[0], brig[1], brig[2])
+    this.setcolor(color.rgb.r, color.rgb.g, color.rgb.b)
     clearTimeout(this.savetimer)
     this.savecolor('#' + color.hex)
+    serverevents.emit('updatecolor', this.id)
+  }
+
+  usersetcolor (c) {
+    if ((this._color !== null) && (this.status !== 'cycle')) {
+      this.old_color = this._color
+    }
+    if (this.status === 'cycle') {
+      this.setcycle({ ison: false })
+    }
+    this.color = c
+  }
+
+  previewcolor (c) {
+    if (this.status === 'cycle') {
+      this.setcycle({ ison: false })
+    }
+    const color = getcolor(c)
+    this.setcolor(color.rgb.r, color.rgb.g, color.rgb.b)
   }
 
   getbrightness (r, g, b) {
@@ -73,6 +91,14 @@ class Light {
     }
     this.status = 'on'
     return this.status
+  }
+
+  setoldcolor () {
+    this.usersetcolor(this.old_color.hex)
+  }
+
+  setoncolor () {
+    this.color = this.oncolor
   }
 
   setcycle ({ ison, colors, effect, speed }) {
@@ -147,8 +173,20 @@ class Light {
     return fadeList
   }
 
+  fadeone (color) {
+    if ((this._color !== null) && (this.status !== 'cycle')) {
+      this.old_color = this._color
+    }
+    if (getcolor(color).hex === this._color.hex) {
+      return
+    }
+    const fade = this.getgradient([this._color.hex, color])
+    this.fade(fade)
+  }
+
   setcolor (r, g, b) {
-    this.io.set(r, g, b)
+    const brig = this.getbrightness(r, g, b)
+    this.io.set(brig[0], brig[1], brig[2])
   }
 
   savecolor (color) {
@@ -160,6 +198,7 @@ class Light {
       save.unshift(color)
       save.splice(19, 1)
       this.savedcolors = save
+      serverevents.emit('updatesaved', this.id)
     }, 6000)
   }
 
@@ -169,31 +208,37 @@ class Light {
         if (this.status === 'cycle') {
           return
         }
-        this.color = this.oncolor
+        // this.color = this.oncolor
+        this.fadeone(this.oncolor)
         break
 
       case 'off':
         if (this.status === 'cycle') {
           this.setcycle({ ison: false })
-          this.color = 'black'
+          // this.color = 'black'
+          this.fadeone('black')
         }
-        this.color = 'black'
+        // this.color = 'black'
+        this.fadeone('black')
         break
 
       default:
         if (this.status === 'off') {
-          this.color = this.oncolor
+          // this.color = this.oncolor
+          this.fadeone(this.oncolor)
           return
         }
 
         if (this.status === 'cycle') {
           this.setcycle({ ison: false })
         }
-        this.color = 'black'
+        // this.color = 'black'
+        this.fadeone('black')
 
         break
     }
   }
 }
 
-module.exports = Light
+module.exports.Light = Light
+module.exports.serverevents = serverevents

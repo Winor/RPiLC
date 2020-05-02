@@ -2,7 +2,7 @@
 'use strict'
 const logger = require('./logger.js')
 const Gpio = require('pigpio').Gpio
-const Device = require('./devices.js')
+const Device = require('./devices.js').Light
 // load config file
 const fs = require('fs')
 const configfile = fs.readFileSync('config.json')
@@ -59,6 +59,19 @@ class Rpi extends Device {
         }, 10 * i)
       })(i)
     }
+  }
+
+  fade (colors) {
+    let i = 0
+    clearInterval(this.fadeonetimer)
+    this.fadeonetimer = setInterval(() => {
+      if ((i === colors.length) || (i > colors.length)) {
+        clearInterval(this.fadeonetimer)
+        return
+      }
+      this.color = colors[i]
+      i++
+    }, 1)
   }
 }
 // creates light device from config file
