@@ -1,29 +1,13 @@
-/* eslint-disable no-new-func */
 'use strict'
 const logger = require('./logger.js')
-const Gpio = require('pigpio').Gpio
+const Pio = require('./gpio.js')
 const Device = require('./devices.js').Light
 // load config file
 const fs = require('fs')
 const configfile = fs.readFileSync('config.json')
 const config = JSON.parse(configfile)
 
-const devices = {}
-
-// creates an object that intracts with the RGB LED Strip
-function Pio (int) {
-  const led = String(Object.keys(int))
-  const pin = {}
-  let cmd = ''
-  Object.keys(int[led]).forEach(function (item) {
-    pin[item] = new Gpio(int[led][item], { mode: Gpio.OUTPUT })
-    pin[item].digitalWrite(0)
-    cmd += 'this.io.' + item + '.pwmWrite(' + item + ');'
-  })
-  this.type = led
-  this.io = pin
-  this.set = new Function(String(Object.keys(int[led])), cmd)
-}
+const devices = require('./loader.js')
 
 class Rpi extends Device {
   fadeTimer (colors) {
@@ -78,20 +62,21 @@ class Rpi extends Device {
 function createpinsfromconfig () {
   let i = 0
   config.gpio.forEach(int => {
-    devices['local-' + i] = new Rpi(
-      String(Object.keys(int)),
-      'local-' + i,
-      'RPi',
-      new Pio(int),
-      'black',
-      'white'
+    devices.add(
+      new Rpi(
+        String(Object.keys(int)),
+        'local-' + i,
+        'RPi',
+        new Pio(int),
+        'black',
+        'white'
+      )
     )
     i++
   })
 }
 
 createpinsfromconfig()
-module.exports = devices
 
 // devices['local-1'].setcycle(true)
 // devices['local-0'].brightness = 20

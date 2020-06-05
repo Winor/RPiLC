@@ -17,6 +17,21 @@ docReady(function () {
     socket.emit(action, selectedevice(), data)
   }
 
+  window.nemit = function (action, data) {
+    socket.emit(action, data)
+  }
+
+  socket.on('connect', function () {
+    if (localStorage.getItem('filter') === null) {
+      localStorage.setItem('filter', 'ALL')
+      socket.emit('askdevs', 'ALL')
+      return
+    }
+    const group = localStorage.getItem('filter')
+    socket.emit('askdevs', group)
+    document.getElementById('filter').value = group
+  })
+
   socket.on('devicelist', function (list) {
     clientdata.devnames = list[1]
     ui.updatedevicelist(list[0])
@@ -38,12 +53,16 @@ docReady(function () {
   })
 
   socket.on('updatecolor', function (c) {
-    const device = selectedevice()
-    serverdata[device].color = c.color
-    if (c.id === device) {
-      joe.setnu(c.color.hex)
-      ui.updatecolorbar(c)
-      ui.updatecolortext(c.color)
+    try {
+      const device = selectedevice()
+      serverdata[device].color = c.color
+      if (c.id === device) {
+        joe.setnu(c.color.hex)
+        ui.updatecolorbar(c)
+        ui.updatecolortext(c.color)
+      }
+    } catch (e) {
+
     }
   })
 
@@ -59,6 +78,22 @@ docReady(function () {
     if (data.id === selectedevice()) {
       ui.updatecyclemode(data.cycle)
     }
+  })
+
+  socket.on('config', function (data) {
+    try {
+      ui.updateconfig(data)
+      document.getElementById('iopins').innerHTML = ''
+      data.gpio.forEach(int => {
+        ui.addrow.apply(null, Object.values(int.RGB))
+      })
+    } catch (e) {
+
+    }
+  })
+
+  socket.on('updates', function (updateinfo) {
+    ui.updates(updateinfo)
   })
 
   joe.on('change', function (c) {
@@ -116,8 +151,24 @@ function sethexval () {
 function devicesetings () {
   emit('devicesetings', {
     name: document.getElementById('name').value,
-    oncolor: document.getElementById('oncolor').value
+    oncolor: document.getElementById('oncolor').value,
+    group: document.getElementById('group').value
   })
+}
+
+function serversetings () {
+  nemit('setconfig', {
+    gpiopins: ui.getpindata(),
+    mode: document.getElementById('smode').value,
+    webserverport: document.getElementById('serverport').value,
+    debug: debug.checked,
+    gpio: gpio.checked,
+    thinsiodevices: thinsiodevices.checked,
+    mqtt: mqtt.checked,
+    serverurl: document.getElementById('rserverurl').value,
+    autogen: false
+  })
+  ui.clientnotification({ type: 'restart' })
 }
 
 function fade () {
@@ -137,8 +188,12 @@ function setarecentcolor () {
 }
 
 function selectedevice () {
-  const device = document.querySelector('input[name="devices"]:checked').id
-  return device
+  try {
+    const device = document.querySelector('input[name="devices"]:checked').id
+    return device
+  } catch (err) {
+    return null
+  }
 }
 
 function askdata () {

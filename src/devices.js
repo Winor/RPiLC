@@ -10,21 +10,24 @@ const serverevents = new ServerEvents()
 function getcolor (c) {
   const color = tinycolor(c)
   if (!color.isValid()) {
-    logger.warn('invalid color.')
+    logger.warn('invalid color: '+ c)
     return
   }
   return {
     rgb: color.toRgb(),
     hex: color.toHex(),
+    hsv: color.toHsv(),
     name: color.toName()
   }
 }
 
 class Light {
-  constructor (type, id, haredware, io, color = 'black', oncolor = 'white') {
+  constructor (type, id, hardware, io, color = 'black', oncolor = 'white') {
     this.type = type
     this.id = id
-    this.haredware = haredware
+    this.name = this.id
+    this.group = '0'
+    this.hardware = hardware
     this.io = io
     this.cycle = {
       ison: false,
@@ -39,7 +42,7 @@ class Light {
   }
 
   get color () {
-    return 'this._color'
+    return this._color
   }
 
   set color (c) {
@@ -48,11 +51,20 @@ class Light {
       return
     }
     this._color = color
+    this.brightness = this._color.hsv.v * 100
     this.getstatus()
     this.setcolor(color.rgb.r, color.rgb.g, color.rgb.b)
     clearTimeout(this.savetimer)
     this.savecolor('#' + color.hex)
     serverevents.emit('updatecolor', this.id)
+  }
+
+  get id () {
+    return this._id
+  }
+
+  set id (id) {
+    this._id = id.replace(/[^a-zA-Z0-9- ]/g, '')
   }
 
   usersetcolor (c) {
@@ -73,11 +85,14 @@ class Light {
     this.setcolor(color.rgb.r, color.rgb.g, color.rgb.b)
   }
 
-  getbrightness (r, g, b) {
-    const rp = Math.ceil((r / 100) * this.brightness)
-    const gp = Math.ceil((g / 100) * this.brightness)
-    const bp = Math.ceil((b / 100) * this.brightness)
-    return [rp, gp, bp]
+  getbrightness (brightness) {
+    const hsv = this.color.hsv
+    hsv.v = brightness / 100
+    return hsv
+  }
+
+  setbrightness (brightness) {
+    this.fadeone(this.getbrightness(brightness))
   }
 
   getstatus () {
@@ -94,7 +109,7 @@ class Light {
   }
 
   setoldcolor () {
-    this.usersetcolor(this.old_color.hex)
+    this.fadeone(this.old_color.hex)
   }
 
   setoncolor () {
@@ -177,6 +192,9 @@ class Light {
     if ((this._color !== null) && (this.status !== 'cycle')) {
       this.old_color = this._color
     }
+    if (this.status === 'cycle') {
+      this.setcycle({ ison: false })
+    }
     if (getcolor(color).hex === this._color.hex) {
       return
     }
@@ -185,8 +203,7 @@ class Light {
   }
 
   setcolor (r, g, b) {
-    const brig = this.getbrightness(r, g, b)
-    this.io.set(brig[0], brig[1], brig[2])
+    this.io.set(r, g, b)
   }
 
   savecolor (color) {
@@ -205,7 +222,7 @@ class Light {
   toggle (state) {
     switch (state) {
       case 'on':
-        if (this.status === 'cycle') {
+        if ((this.status === 'cycle') || (this.status === 'on')) {
           return
         }
         // this.color = this.oncolor

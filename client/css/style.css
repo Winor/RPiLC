@@ -137,6 +137,10 @@
    padding: 5px;
    border-bottom: 1px solid #323232;
  }
+ 
+ .uk-background-secondary {
+   background: var(--sec-bg-color) !important;
+ }
 
  .actionbtn {
   height: 55px;
@@ -154,6 +158,14 @@
 background: var(--btn-hover-color);
  }
 
+ input[name=actionbtn]:checked+label {
+  background: var(--btn-checked-color);
+   }
+
+   input[name=actionbtn] {
+    display: none;
+  }
+ 
  input[name=selectui] {
    display: none;
  }
@@ -224,7 +236,6 @@ background: var(--btn-hover-color);
   margin-left: 5%;
   width: 100px;
   height: 40px;
-  overflow: hidden;
   overflow: -moz-hidden-unscrollable;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -252,4 +263,8 @@ input[name=devices]:hover+label {
   text-align: center;
   display: inline-block;
   padding-top: 10px;
+}
+
+@media (hover: none) {
+  a:hover { color: inherit; }
 }
