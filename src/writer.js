@@ -2,6 +2,7 @@
 const fs = require('fs')
 const packagefile = fs.readFileSync('package.json')
 const packagejson = JSON.parse(packagefile)
+const semver = require('semver')
 
 function Configdata ({ gpiopins = [], mode = 'server', webserverport = '80', debug = false, gpio = false, thinsiodevices = false, mqtt = false, serverurl = 'localhost', autogen = true }) {
   this.gpio = gpiopins
@@ -47,7 +48,18 @@ module.exports = {
   },
   setconfig: function (data) {
     this.write('./config.json', new Configdata(data))
-  }
+  },
+  configver: function () {
+    if (!fs.existsSync('./config.json')) {
+      return
+    }
+    if (semver.diff(this.read('./config.json').Version, packagejson.version) === 'major') {
+      fs.rename('./config.json', './config.old.json', (err) => {
+        if (err) throw err;
+        console.log('Outdated config file, renaming.');
+      });
+    }
+  },
   // ConfigConstract: function (config) {
   //   this.ConfigData.gpio.rgb.red = config.red;
   //   this.ConfigData.gpio.rgb.green = config.green;
@@ -59,3 +71,4 @@ module.exports = {
   //   this.ConfigData.AutoGen = false;
   // },
 }
+

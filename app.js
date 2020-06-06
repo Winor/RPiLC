@@ -1,7 +1,8 @@
 'use strict'
 const fs = require('fs')
-
 const writer = require('./src/writer.js')
+writer.configver()
+
 if (!fs.existsSync('./config.json')) {
   console.log('Generating Config File')
   writer.genconfig()

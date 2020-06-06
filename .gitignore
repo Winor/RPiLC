@@ -4,4 +4,5 @@ package-lock.json
 .ftpconfig
 storage
 config.json
+config.old.json
 storage.json
