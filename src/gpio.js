@@ -1,29 +1,19 @@
+/* eslint-disable no-new-func */
 'use strict'
-const logger = require('./logger.js');
-// load config file
-const fs = require("fs");
-const configfile = fs.readFileSync("config.json");
-const config = JSON.parse(configfile);
-logger.debug('Config File Loaded.');
-// require pigpio and set PWM gpio numbers
-const Gpio = require('pigpio').Gpio,
-  red = new Gpio(config.gpio_pin.red, {
-    mode: Gpio.OUTPUT
-  }),
-  green = new Gpio(config.gpio_pin.green, {
-    mode: Gpio.OUTPUT
-  }),
-  blue = new Gpio(config.gpio_pin.blue, {
-    mode: Gpio.OUTPUT
-  });
-// set value to zero
-  red.digitalWrite(0);
-  green.digitalWrite(0);
-  blue.digitalWrite(0);
+const Gpio = require('pigpio').Gpio
+// creates an object that intracts with the RGB LED Strip
+function Pio (int) {
+  const led = String(Object.keys(int))
+  const pin = {}
+  let cmd = ''
+  Object.keys(int[led]).forEach(function (item) {
+    pin[item] = new Gpio(int[led][item], { mode: Gpio.OUTPUT })
+    pin[item].digitalWrite(0)
+    cmd += 'this.io.' + item + '.pwmWrite(' + item + ');'
+  })
+  this.type = led
+  this.io = pin
+  this.set = new Function(String(Object.keys(int[led])), cmd)
+}
 
-// function to write PWM value
-module.exports = function (r, g, b) {
-  red.pwmWrite(r);
-  green.pwmWrite(g);
-  blue.pwmWrite(b);
-};
+module.exports = Pio
