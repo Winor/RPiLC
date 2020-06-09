@@ -11,7 +11,12 @@ function docReady (fn) {
 
 docReady(function () {
   const joe = colorjoe.rgb('rgbPicker', 'black')
-  const socket = io.connect()
+  if (window.io === undefined) {
+    ui.addelectronelm()
+    window.socket = require('socket.io-client')('http://10.0.0.11')
+  } else {
+    window.socket = io.connect()
+  }
 
   window.emit = function (action, data) {
     socket.emit(action, selectedevice(), data)
