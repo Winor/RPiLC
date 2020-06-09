@@ -96,6 +96,7 @@
     margin: 0px !important;
     margin-top: 5px !important;
     background-color: var(--sec-bg-color);
+    height: 50px;
   }
 
   .ttl {
@@ -236,7 +237,7 @@ background: var(--btn-hover-color);
   margin-left: 5%;
   width: 100px;
   height: 40px;
-  overflow: -moz-hidden-unscrollable;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
