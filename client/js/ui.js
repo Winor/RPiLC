@@ -228,6 +228,15 @@ const ui = {
       default:
         break
     }
+  },
+  addelectronelm: function () {
+    document.body.insertAdjacentHTML("afterbegin", `<div id="title-bar">
+    <div id="title">RPiLC</div>
+    <div id="title-bar-btns">
+         <button class="uk-button uk-button-secondary uk-button-small" id="close-btn"><span uk-icon="close"></span></button>
+    </div>
+</div>`)
+
   }
 }
 
