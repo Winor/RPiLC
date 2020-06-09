@@ -162,7 +162,7 @@ const ui = {
     mqtt.checked = config.server_settings.mqtt
     document.getElementById('rserverurl').value = config.remote_settings.serverurl
     document.getElementById('smode').value = config.server_settings.mode
-    document.getElementById('info').innerHTML = 'RPiLC Version 2.1.2'
+    document.getElementById('info').innerHTML = 'RPiLC Version 2.1.3'
   },
   addcolor: function (x) {
     if (x === undefined) {
