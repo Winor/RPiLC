@@ -30,11 +30,11 @@ client.on('message', function (topic, message) {
       switch (message.effect) {
         case 'set old color':
           interact.setoldcolor(device)
-          break
+          return
+          
         default:
           break
       }
-      return
     }
     if (message.color === undefined) {
       if (message.brightness !== undefined) {
